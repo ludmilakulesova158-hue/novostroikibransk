@@ -20,8 +20,6 @@
     "Уточняется"
   ],
   "description": "Новый, масштабный проект. Детали, планировки, цены и сроки уточняются — оставьте заявку, сообщу первым, когда появится официальная информация.",
-  "order": 8,
-  "image": "/images/zhk/osobin.jpg",
-  "imageNote": "Иллюстративное фото",
-  "imageCredit": "Atmosfera fk32 · CC BY-SA 4.0 · Wikimedia Commons"
+  "order": 18,
+  "featured": false
 }

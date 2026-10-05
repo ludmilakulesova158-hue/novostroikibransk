@@ -21,8 +21,6 @@
     "Разные этажи и планировки"
   ],
   "description": "Жилой комплекс на ул. Флотская в Бежицком районе. Свободные квартиры, цены и сроки сдачи уточняются — помогу подобрать вариант.",
-  "order": 6,
-  "image": "/images/zhk/obereg.jpg",
-  "imageNote": "Иллюстративное фото",
-  "imageCredit": "Atmosfera fk32 · CC BY-SA 4.0 · Wikimedia Commons"
+  "order": 16,
+  "featured": false
 }

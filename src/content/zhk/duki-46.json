@@ -21,8 +21,6 @@
     "Монолит"
   ],
   "description": "Жилой комплекс на ул. Дуки, рядом с офисом в ТЦ «Соловьи». Удобное расположение и городская инфраструктура. Цены и сроки уточняются.",
-  "order": 7,
-  "image": "/images/zhk/duki-46.jpg",
-  "imageNote": "Иллюстративное фото",
-  "imageCredit": "Atmosfera fk32 · CC BY-SA 4.0 · Wikimedia Commons"
+  "order": 17,
+  "featured": false
 }
