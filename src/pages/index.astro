@@ -112,8 +112,9 @@ const faq = [
         <div class="grid grid--3">
           {featured.map((z) => <ZHKCard zhk={z} />)}
         </div>
-        <div class="section-foot">
+        <div class="section-foot section-foot--row">
           <a class="btn btn--ghost" href="/novostroyki/">Все новостройки Брянска <Icon name="arrow-right" size={18} /></a>
+          <a class="btn btn--primary" href="/novostroyki/obzor/">Цены и сроки сдачи 2026–2028</a>
         </div>
       </div>
     </section>
@@ -192,6 +193,7 @@ const faq = [
     .segment p { margin: 0; color: var(--muted); }
     .segment__more { margin-top: auto; display: inline-flex; align-items: center; gap: 8px; font-weight: 700; color: var(--terracotta); }
     .section-foot { margin-top: 34px; text-align: center; }
+    .section-foot--row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
     .about-teaser { padding: var(--section-y) 0; }
     .about-teaser__inner { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(28px, 5vw, 64px); align-items: center; }
     .about-teaser__text p { color: var(--on-dark-muted); font-size: 17px; }

@@ -5,12 +5,23 @@ import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import ZHKCard from '../../components/ZHKCard.astro';
 import Faqs from '../../components/blocks/Faqs.astro';
 import LeadForm from '../../components/LeadForm.astro';
+import Icon from '../../components/Icon.astro';
 import { DISTRICTS } from '../../consts';
 import { zhkItemListGraph } from '../../lib/schema';
 
 const zhk = (await getCollection('zhk')).sort((a, b) => a.data.order - b.data.order);
 const districts = DISTRICTS.filter((d) => zhk.some((z) => z.data.district === d));
 const itemList = zhkItemListGraph(zhk.map((z) => ({ name: z.data.name, url: `/novostroyki/${z.id}/`, district: z.data.district })));
+
+const catalogTop = [
+  ['Медовый', 'Советский, ул. Ильи Иванова', 'БСК', '4 кв. 2026 — 2 кв. 2028', '1К от 4,2; 2К от 6,4; 3К от 9,9 млн ₽'],
+  ['Проспект', 'Советский, Станке Димитрова', 'СЗ «Созидание»', '4 кв. 2026 / 4 кв. 2028', '2К от 6,3; 3К от 7,7 млн ₽'],
+  ['Цветной бульвар', 'Путёвка, ул. Романа Брянского', 'СЗ «Цветной бульвар»', '2 кв. 2027 / 1 кв. 2028', '1К от 3,2; 2К от 4,9; 3К от 7,5 млн ₽'],
+  ['Акватория', 'Бежицкий, ул. Бурова', 'СЗ «Е-ГРУПП»', 'до 2 кв. 2027', '1К от 4,0; 2К от 6,5; 3К от 9,2 млн ₽'],
+  ['Архитектор', 'Советский, Амосова', 'СЗ «Фабрика Атмосферы»', 'до 1 кв. 2027', 'от 4,4 млн ₽ (бизнес)'],
+  ['Новый город', 'Советский, ул. Войстроченко', 'Ягода Девелопмент', 'до 2 кв. 2028', 'студии от 3,5; 2К от 5,9; 3К от 8,6 млн ₽'],
+  ['Три башни', 'Бежицкий, ул. Комарова', 'Ягода Девелопмент', 'до 4 кв. 2026', 'студии от 4,5; 2К от 6,7; 3К от 8,8 млн ₽'],
+];
 
 const faq = [
   { q: 'Какие новостройки есть в Брянске?', a: 'В подборке — ЖК «ПРАЙМ», клубный квартал «ГРИНВУД», НЕКСТ на Площади Партизан, ЖК «ОБЕРЕГ», ЖК «Дуки 46» и новые проекты. Список обновляется по мере выхода новых очередей.' },
@@ -68,6 +79,37 @@ const faq = [
     </div>
   </section>
 
+  <section class="section section--tight section--paper2">
+    <div class="container">
+      <header class="section-head">
+        <p class="eyebrow">Обзор рынка</p>
+        <h2>Новостройки Брянска: цены и сроки сдачи</h2>
+        <p class="lead">Средняя цена метра — 117–128 тыс. ₽, квартиры от 2,6 млн ₽. В обзоре — 30+ строящихся и сданных ЖК: застройщик, адрес, срок сдачи и цены от застройщика.</p>
+      </header>
+      <div class="table-wrap">
+        <table class="zhk-table">
+          <thead>
+            <tr><th>ЖК</th><th>Адрес / район</th><th>Застройщик</th><th>Сдача</th><th>Цены от застройщика</th></tr>
+          </thead>
+          <tbody>
+            {catalogTop.map((r) => (
+              <tr>
+                <td class="zhk-table__name">{r[0]}</td>
+                <td>{r[1]}</td>
+                <td>{r[2]}</td>
+                <td>{r[3]}</td>
+                <td>{r[4]}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div class="section-foot">
+        <a class="btn btn--primary" href="/novostroyki/obzor/">Полный обзор новостроек 2026–2028 <Icon name="arrow-right" size={18} /></a>
+      </div>
+    </div>
+  </section>
+
   <Faqs items={faq} eyebrow="Вопросы о новостройках" title="Частые вопросы о новостройках Брянска" />
   <LeadForm title="Подберу новостройку под ваш бюджет" text="Оставьте контакты — подберу жилые комплексы Брянска под ваши задачи, бюджет и сроки. Консультация бесплатная." source="novostroyki" />
 
@@ -105,5 +147,11 @@ const faq = [
     .zhk-wrap { display: flex; }
     .zhk-wrap > * { width: 100%; }
     .filter-empty { margin-top: 24px; }
+    .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); margin: 0 0 8px; }
+    .zhk-table { width: 100%; border-collapse: collapse; font-size: 14.5px; min-width: 760px; }
+    .zhk-table th { text-align: left; padding: 12px 14px; background: var(--paper); color: var(--ink); font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: .04em; border-bottom: 1px solid var(--line); white-space: nowrap; }
+    .zhk-table td { padding: 12px 14px; border-bottom: 1px solid var(--line); color: var(--ink-2); vertical-align: top; }
+    .zhk-table tr:last-child td { border-bottom: 0; }
+    .zhk-table__name { font-weight: 700; color: var(--ink); white-space: nowrap; }
   </style>
 </BaseLayout>
