@@ -3,6 +3,14 @@
 Персональный сайт эксперта по недвижимости в Брянске (новостройки, вторичка, загородка) с
 SEO/GEO-фундаментом и ядром контент-автопилота `egorov_seo`.
 
+## Ссылки
+- **GitHub-репозиторий:** https://github.com/ludmilakulesova158-hue/novostroikibransk
+- **Превью на GitHub Pages:** https://ludmilakulesova158-hue.github.io/novostroikibransk/
+  (публикуется из ветки `gh-pages`; при пуше в `main` workflow `.github/workflows/deploy.yml`
+  пересобирает сайт, префиксует ссылки под подпапку репозитория и обновляет `gh-pages`).
+  ⚠️ На GitHub Pages форма заявки не работает (нет PHP) — это только превью; боевые заявки — на
+  хостинге с `api/lead.php`.
+
 ## Стек
 - **Astro 5** (static), чистый scoped CSS, `@astrojs/mdx`, `@astrojs/sitemap`.
 - Шрифты: **Prata** (заголовки) + **Manrope** (текст) — Google Fonts, кириллица.
@@ -36,6 +44,7 @@ npm run check        # astro check (типы)
 node scripts/local-audit.mjs   # тех-аудит dist (on-page/schema/качество)
 node scripts/words.mjs         # подсчёт слов по страницам
 python scripts/deploy-ftp.py   # деплой dist/ на FTP (после build)
+node scripts/prefix-base.mjs novostroikibransk   # префикс ссылок под GitHub Pages (project site)
 ```
 
 ## Перед публикацией (обязательно)
