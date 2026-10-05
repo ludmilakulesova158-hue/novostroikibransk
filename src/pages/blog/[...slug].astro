@@ -53,7 +53,7 @@ const schema = articleGraph({
       <div class="prose post__prose"><Content /></div>
 
       <div class="post__author">
-        <Portrait src="/images/olga.jpg" alt="Ольга Валентинова" width={72} height={72} round class="post__avatar" />
+        <Portrait src="/images/olga.jpg" alt="Ольга Валентинова" width={72} height={72} size={72} round />
         <div>
           <strong>{SITE.name}</strong>
           <span>{SITE.role}, {SITE.agency}</span>
@@ -90,7 +90,6 @@ const schema = articleGraph({
     .post h1 { margin-bottom: 20px; }
     .post__tldr { margin: 0 0 30px; font-size: 16.5px; line-height: 1.6; }
     .post__author { display: flex; gap: 16px; align-items: flex-start; margin-top: 40px; padding-top: 26px; border-top: 1px solid var(--line); }
-    .post__avatar { width: 72px; height: 72px; flex: none; }
     .post__author strong { display: block; }
     .post__author span { font-size: 14px; color: var(--muted); }
     .post__author p { margin: 8px 0 0; font-size: 15px; color: var(--muted); }

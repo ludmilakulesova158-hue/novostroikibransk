@@ -37,7 +37,9 @@ const badges = ['Новостройки', 'Вторичка', 'Загород', 
         width={640}
         height={760}
         eager
-        class="hero__photo"
+        ratio="4 / 5"
+        radius="xl"
+        shadow
       />
       <div class="hero__card hero__card--agency">
         <span class="icon-badge icon-badge--ochre"><Icon name="building" size={24} /></span>
@@ -68,7 +70,6 @@ const badges = ['Новостройки', 'Вторичка', 'Загород', 
   .hero__badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--terracotta); }
 
   .hero__media { position: relative; }
-  .hero__photo { border-radius: var(--r-xl); aspect-ratio: 4 / 5; box-shadow: var(--shadow-lg); }
 
   .hero__card { position: absolute; z-index: 2; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 14px 16px; box-shadow: var(--shadow); display: flex; gap: 12px; align-items: center; max-width: 268px; }
   .hero__card strong { display: block; font-size: 14.5px; }

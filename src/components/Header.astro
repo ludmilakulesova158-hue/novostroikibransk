@@ -31,7 +31,7 @@ const isActive = (href: string) => current === href || (href !== '/' && current.
         <Icon name="phone" size={18} />
         <span>{SITE.phone}</span>
       </a>
-      <a class="btn btn--primary btn--sm header-cta" href="/#zayavka">Консультация</a>
+      <a class="btn btn--primary btn--sm header-cta" href="/#zayavka">Заявка</a>
       <button class="burger" type="button" aria-label="Открыть меню" aria-expanded="false" data-burger>
         <Icon name="menu" size={26} class="burger__open" />
         <Icon name="close" size={26} class="burger__close" />
@@ -88,7 +88,7 @@ const isActive = (href: string) => current === href || (href !== '/' && current.
     transition: border-color .2s ease, background .2s ease;
   }
   .site-header.is-scrolled { border-bottom-color: var(--line); background: rgba(246, 242, 234, 0.94); }
-  .site-header__inner { display: flex; align-items: center; gap: 22px; min-height: 76px; }
+  .site-header__inner { display: flex; align-items: center; gap: 14px; min-height: 76px; }
 
   .brand { display: flex; align-items: center; gap: 12px; flex: none; min-width: 0; }
   .brand__mark {
@@ -97,14 +97,14 @@ const isActive = (href: string) => current === href || (href !== '/' && current.
     letter-spacing: .02em;
   }
   .brand__text { display: flex; flex-direction: column; line-height: 1.18; min-width: 0; }
-  .brand__name { font-family: var(--font-display); font-size: 19px; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 42vw; }
+  .brand__name { font-family: var(--font-display); font-size: 18px; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 42vw; }
   .brand__role { font-size: 12px; color: var(--muted); font-weight: 600; letter-spacing: .02em; }
 
-  .nav { margin-left: auto; }
-  .nav__list { display: flex; align-items: center; gap: 4px; list-style: none; margin: 0; padding: 0; }
+  .nav { flex: 1 1 auto; display: flex; justify-content: center; min-width: 0; }
+  .nav__list { display: flex; align-items: center; gap: 2px; list-style: none; margin: 0; padding: 0; flex-wrap: nowrap; }
   .nav__link {
-    display: block; padding: 9px 13px; border-radius: var(--r-pill); font-size: 15px; font-weight: 600;
-    color: var(--ink-2); transition: background .16s ease, color .16s ease;
+    display: block; padding: 8px 9px; border-radius: var(--r-pill); font-size: 14px; font-weight: 600;
+    color: var(--ink-2); white-space: nowrap; transition: background .16s ease, color .16s ease;
   }
   .nav__link:hover { background: var(--paper-2); }
   .nav__link.is-active { color: var(--terracotta); background: var(--terracotta-soft); }
@@ -125,14 +125,16 @@ const isActive = (href: string) => current === href || (href !== '/' && current.
   .mobile-menu__foot { padding: 12px 0 22px; display: grid; gap: 12px; }
   .mobile-menu__phone { display: inline-flex; align-items: center; gap: 8px; justify-content: center; font-weight: 700; }
 
-  @media (max-width: 1080px) {
+  @media (max-width: 1200px) {
     .nav { display: none; }
     .burger { display: grid; }
     .header-cta { display: none; }
   }
-  @media (max-width: 620px) {
+  @media (max-width: 1365px) {
     .header-phone span { display: none; }
     .header-phone { padding: 10px; border: 1px solid var(--line-strong); border-radius: 12px; }
+  }
+  @media (max-width: 620px) {
     .brand__role { display: none; }
   }
   @media (max-width: 420px) {

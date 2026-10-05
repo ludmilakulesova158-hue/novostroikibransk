@@ -1,6 +1,7 @@
 ---
-// Портрет с надёжным fallback: если файл не загрузился (404), показываем аккуратную заглушку,
-// а не «битую картинку». Реальное фото эксперта не генерируется (E-E-A-T) — только плейсхолдер.
+// Портрет с надёжным fallback и собственной геометрией (радиус/пропорции/размер).
+// ВАЖНО: классы родителя НЕ прокидывают scoped-стили в корень этого компонента,
+// поэтому радиус и пропорции задаются здесь пропсами, а не извне.
 interface Props {
   src: string;
   alt: string;
@@ -9,10 +10,34 @@ interface Props {
   class?: string;
   eager?: boolean;
   round?: boolean;
+  radius?: 'sm' | 'base' | 'lg' | 'xl' | 'full';
+  ratio?: string;
+  size?: number;
+  shadow?: boolean;
 }
-const { src, alt, width = 640, height = 760, class: cls = '', eager = false, round = false } = Astro.props;
+const {
+  src,
+  alt,
+  width = 640,
+  height = 760,
+  class: cls = '',
+  eager = false,
+  round = false,
+  radius = 'lg',
+  ratio,
+  size,
+  shadow = false,
+} = Astro.props;
+
+const radiusMap = { sm: 'var(--r-sm)', base: 'var(--r)', lg: 'var(--r-lg)', xl: 'var(--r-xl)', full: '999px' } as const;
+const br = round ? '50%' : radiusMap[radius];
+const parts = [`border-radius:${br}`];
+if (ratio) parts.push(`aspect-ratio:${ratio}`);
+if (size) parts.push(`width:${size}px`, `height:${size}px`, 'flex:none');
+if (shadow) parts.push('box-shadow:var(--shadow-lg)');
+const styleStr = parts.join(';');
 ---
-<span class:list={['portrait', cls, { 'portrait--round': round }]}>
+<span class:list={['portrait', cls]} style={styleStr}>
   <img
     src={src}
     alt={alt}
@@ -43,7 +68,6 @@ const { src, alt, width = 640, height = 760, class: cls = '', eager = false, rou
     object-position: center top;
   }
   .portrait img.is-broken { display: none; }
-  .portrait--round { border-radius: 50%; }
   .portrait__fallback {
     position: absolute;
     inset: 0;

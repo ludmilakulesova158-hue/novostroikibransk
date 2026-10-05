@@ -49,7 +49,9 @@ const schema = {
         width={640}
         height={760}
         eager
-        class="expert-hero__media"
+        ratio="4 / 5"
+        radius="xl"
+        shadow
       />
       <div class="expert-hero__text">
         <p class="eyebrow">Об эксперте</p>
@@ -108,7 +110,6 @@ const schema = {
   <style>
     .expert-hero { padding: clamp(24px, 4vw, 56px) 0; }
     .expert-hero__inner { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: clamp(28px, 5vw, 64px); align-items: center; }
-    .expert-hero__media { border-radius: var(--r-xl); aspect-ratio: 4 / 5; box-shadow: var(--shadow-lg); }
     .expert-hero__stats { display: flex; gap: 26px; flex-wrap: wrap; margin: 24px 0; }
     .expert-stat { display: flex; flex-direction: column; }
     .expert-stat__value { font-family: var(--font-display); font-size: 22px; color: var(--terracotta); }
