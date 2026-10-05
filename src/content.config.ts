@@ -46,6 +46,8 @@ const zhk = defineCollection({
     features: z.array(z.string()).default([]),
     description: z.string().default(''),
     image: z.string().optional(),
+    imageNote: z.string().optional(),
+    imageCredit: z.string().optional(),
     mapUrl: z.string().optional(),
     featured: z.boolean().default(false),
     order: z.number().default(99),

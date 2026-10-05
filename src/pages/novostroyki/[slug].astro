@@ -61,10 +61,11 @@ const complexSchema = {
     <div class="container zhk-detail__inner">
       <div class="zhk-detail__media">
         {d.image ? (
-          <img src={d.image} alt={`${d.name}, ${d.district} район Брянска`} width="720" height="540" loading="eager" />
+          <img src={d.image} alt={`${d.name} — иллюстративное изображение жилого комплекса`} width="720" height="540" loading="eager" />
         ) : (
           <span class="zhk-detail__placeholder" aria-hidden="true"><Icon name="building" size={72} /></span>
         )}
+        {d.image && d.imageNote && <span class="zhk-detail__imgcap">{d.imageNote}</span>}
       </div>
       <div class="zhk-detail__info">
         <span class="tag tag--terracotta">{d.district} район</span>
@@ -105,6 +106,9 @@ const complexSchema = {
       <p>{d.description}</p>
       {d.rooms.length > 0 && <p>В комплексе представлены квартиры: {d.rooms.map((r) => `${r}-комнатные`).join(', ')}.</p>}
       <p>Чтобы узнать актуальные цены, свободные лоты и условия покупки — оставьте заявку. Я предоставлю проверенную информацию от застройщика, помогу с ипотекой и проведу сделку «под ключ».</p>
+      {d.imageNote && (
+        <p class="small muted">Изображение иллюстративное и не является точным видом объекта.{d.imageCredit ? ` Фото: ${d.imageCredit}.` : ''}</p>
+      )}
     </div>
   </section>
 
@@ -131,8 +135,9 @@ const complexSchema = {
   <style>
     .zhk-detail { padding: clamp(20px, 3vw, 40px) 0 clamp(10px, 2vw, 20px); }
     .zhk-detail__inner { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 4vw, 56px); align-items: start; }
-    .zhk-detail__media { border-radius: var(--r-xl); overflow: hidden; aspect-ratio: 4 / 3; background: var(--sand); }
+    .zhk-detail__media { position: relative; border-radius: var(--r-xl); overflow: hidden; aspect-ratio: 4 / 3; background: var(--sand); }
     .zhk-detail__media img { width: 100%; height: 100%; object-fit: cover; }
+    .zhk-detail__imgcap { position: absolute; right: 12px; bottom: 12px; background: rgba(31,27,22,.62); color: #fff; font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: var(--r-pill); backdrop-filter: blur(4px); }
     .zhk-detail__placeholder { display: grid; place-items: center; width: 100%; height: 100%; color: var(--terracotta); background: linear-gradient(150deg, var(--sand), var(--terracotta-soft)); }
     .zhk-detail__info h1 { margin: 14px 0 14px; }
     .zhk-detail__specs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; margin: 10px 0 18px; }

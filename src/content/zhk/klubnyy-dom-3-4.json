@@ -10,8 +10,18 @@
   "delivery": "Уточняется",
   "priceFrom": "Уточняется",
   "priceM2": "Уточняется",
-  "rooms": ["1", "2"],
-  "features": ["ул. Степная", "Кирпич", "Клубный формат"],
+  "rooms": [
+    "1",
+    "2"
+  ],
+  "features": [
+    "ул. Степная",
+    "Кирпич",
+    "Клубный формат"
+  ],
   "description": "Клубный дом на ул. Степная в Советском районе. Подбор квартир, цены и сроки — по запросу у эксперта.",
-  "order": 4
+  "order": 4,
+  "image": "/images/zhk/klubnyy-dom-3-4.jpg",
+  "imageNote": "Иллюстративное фото",
+  "imageCredit": "Atmosfera fk32 · CC BY-SA 4.0 · Wikimedia Commons"
 }

@@ -19,6 +19,7 @@ const url = `/novostroyki/${zhk.id}/`;
       </span>
     )}
     <span class="zhk-card__district">{d.district}</span>
+    {d.image && d.imageNote && <span class="zhk-card__img-note">{d.imageNote}</span>}
   </a>
   <div class="zhk-card__body">
     <h3 class="zhk-card__title"><a href={url}>{d.shortName || d.name}</a></h3>
@@ -43,6 +44,7 @@ const url = `/novostroyki/${zhk.id}/`;
   .zhk-card:hover .zhk-card__media img { transform: scale(1.04); }
   .zhk-card__placeholder { position: absolute; inset: 0; display: grid; place-items: center; color: var(--terracotta); background: linear-gradient(150deg, var(--sand), var(--terracotta-soft)); }
   .zhk-card__district { position: absolute; left: 12px; top: 12px; background: rgba(31,27,22,.82); color: #fff; font-size: 12.5px; font-weight: 700; padding: 5px 12px; border-radius: var(--r-pill); backdrop-filter: blur(4px); }
+  .zhk-card__img-note { position: absolute; right: 10px; bottom: 10px; background: rgba(31,27,22,.62); color: #fff; font-size: 11px; font-weight: 600; padding: 4px 9px; border-radius: var(--r-pill); backdrop-filter: blur(4px); }
   .zhk-card__body { padding: 20px 20px 22px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
   .zhk-card__title { margin: 0; font-size: 20px; }
   .zhk-card__title a:hover { color: var(--terracotta); }
