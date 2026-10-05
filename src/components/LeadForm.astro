@@ -1,0 +1,154 @@
+---
+import { SITE } from '../consts';
+import Icon from './Icon.astro';
+
+interface Props {
+  title?: string;
+  text?: string;
+  source?: string;
+  dark?: boolean;
+}
+const {
+  title = 'Бесплатная консультация',
+  text = 'Оставьте контакты — свяжусь с вами, отвечу на вопросы и подберу варианты под ваш бюджет.',
+  source = 'site',
+  dark = false,
+} = Astro.props;
+
+const bullets = [
+  'Бесплатная консультация без обязательств',
+  'Подбор новостройки, вторички или дома',
+  'Помощь с ипотекой и проверкой объекта',
+];
+---
+<section class:list={['lead-section', { 'lead-section--dark': dark }]} id="zayavka">
+  <div class="container lead-section__inner">
+    <div class="lead-section__intro">
+      <p class="eyebrow">{SITE.agency}</p>
+      <h2 set:html={title} />
+      <p class="lead">{text}</p>
+      <ul class="lead-section__bullets">
+        {bullets.map((b) => (
+          <li><span class="lead-section__check"><Icon name="check" size={16} /></span>{b}</li>
+        ))}
+      </ul>
+      <div class="lead-section__contacts">
+        <a href={SITE.phoneHref}><Icon name="phone" size={18} /> {SITE.phone}</a>
+        <a href={`mailto:${SITE.email}`}><Icon name="mail" size={18} /> {SITE.email}</a>
+      </div>
+    </div>
+
+    <form class="lead-form" data-lead-form data-endpoint={SITE.leadEndpoint} novalidate>
+      <input type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" class="lead-form__hp" />
+      <input type="hidden" name="source" value={source} />
+      <input type="hidden" name="page" value={Astro.url.pathname} />
+
+      <label class="lead-form__field">
+        <span>Как вас зовут</span>
+        <input type="text" name="name" placeholder="Имя" required autocomplete="name" />
+      </label>
+      <label class="lead-form__field">
+        <span>Телефон или мессенджер</span>
+        <input type="tel" name="contact" placeholder="+7 ___ ___-__-__" required autocomplete="tel" />
+      </label>
+      <label class="lead-form__field">
+        <span>Что вас интересует <em>(необязательно)</em></span>
+        <textarea name="message" rows="3" placeholder="Новостройка, вторичка, дом, ипотека…"></textarea>
+      </label>
+
+      <label class="lead-form__consent">
+        <input type="checkbox" name="consent" required />
+        <span>Я согласен на обработку <a href={SITE.policyPath}>персональных данных</a></span>
+      </label>
+
+      <button type="submit" class="btn btn--primary btn--block">
+        <span class="lead-form__submit-text">Оставить заявку</span>
+        <Icon name="arrow-right" size={19} />
+      </button>
+      <p class="lead-form__status" data-lead-status role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+
+<script is:inline define:vars={{ ENDPOINT: SITE.leadEndpoint, PHONE: SITE.phone, METRIKA_ID: SITE.metrikaId }}>
+  (function () {
+    document.querySelectorAll('[data-lead-form]').forEach(function (form) {
+      var status = form.querySelector('[data-lead-status]');
+      var btn = form.querySelector('button[type="submit"]');
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var data = Object.fromEntries(new FormData(form).entries());
+        if (!data.name || !data.contact) {
+          if (status) { status.textContent = 'Пожалуйста, укажите имя и телефон.'; status.className = 'lead-form__status is-error'; }
+          return;
+        }
+        if (!form.querySelector('input[name="consent"]').checked) {
+          if (status) { status.textContent = 'Нужно согласие на обработку персональных данных.'; status.className = 'lead-form__status is-error'; }
+          return;
+        }
+        if (data.company) return; // honeypot
+        var endpoint = form.getAttribute('data-endpoint') || ENDPOINT;
+        if (btn) { btn.disabled = true; btn.classList.add('is-loading'); }
+        fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        })
+          .then(function (r) { return r.json().catch(function () { return {}; }); })
+          .then(function (res) {
+            if (res && res.ok) {
+              form.reset();
+              if (status) { status.textContent = 'Спасибо! Заявка отправлена — свяжусь с вами в ближайшее время.'; status.className = 'lead-form__status is-ok'; }
+              if (window.ym && METRIKA_ID) { try { window.ym(METRIKA_ID, 'reachGoal', 'lead'); } catch (e) {} }
+            } else {
+              if (status) { status.textContent = 'Не удалось отправить. Позвоните: ' + PHONE; status.className = 'lead-form__status is-error'; }
+            }
+          })
+          .catch(function () {
+            if (status) { status.textContent = 'Ошибка сети. Попробуйте позже или позвоните нам.'; status.className = 'lead-form__status is-error'; }
+          })
+          .finally(function () {
+            if (btn) { btn.disabled = false; btn.classList.remove('is-loading'); }
+          });
+      });
+    });
+  })();
+</script>
+
+<style>
+  .lead-section { padding: var(--section-y) 0; }
+  .lead-section--dark { background: var(--dark); color: var(--on-dark); }
+  .lead-section__inner { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 5vw, 64px); align-items: start; }
+  .lead-section--dark h2 { color: var(--on-dark); }
+  .lead-section--dark .lead { color: var(--on-dark-muted); }
+  .lead-section__bullets { list-style: none; margin: 22px 0 0; padding: 0; display: grid; gap: 12px; }
+  .lead-section__bullets li { display: flex; gap: 11px; align-items: flex-start; font-weight: 600; }
+  .lead-section__check { width: 24px; height: 24px; border-radius: 50%; background: var(--terracotta-soft); color: var(--terracotta); display: grid; place-items: center; flex: none; margin-top: 1px; }
+  .lead-section--dark .lead-section__check { background: rgba(192,138,46,.18); color: var(--ochre); }
+  .lead-section__contacts { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 24px; }
+  .lead-section__contacts a { display: inline-flex; align-items: center; gap: 9px; font-weight: 700; }
+  .lead-section--dark .lead-section__contacts a { color: var(--on-dark); }
+  .lead-section__contacts svg { color: var(--terracotta); }
+  .lead-section--dark .lead-section__contacts svg { color: var(--ochre); }
+
+  .lead-form { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: clamp(22px, 3vw, 32px); box-shadow: var(--shadow); display: grid; gap: 16px; }
+  .lead-form__hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+  .lead-form__field { display: grid; gap: 7px; }
+  .lead-form__field > span { font-size: 14px; font-weight: 700; color: var(--ink-2); }
+  .lead-form__field em { font-style: normal; color: var(--muted-2); font-weight: 500; }
+  .lead-form input[type='text'], .lead-form input[type='tel'], .lead-form textarea {
+    width: 100%; padding: 13px 15px; border: 1.5px solid var(--line-strong); border-radius: var(--r-sm);
+    font: inherit; font-size: 16px; color: var(--ink); background: var(--paper);
+  }
+  .lead-form input:focus, .lead-form textarea:focus { border-color: var(--terracotta); background: #fff; outline: none; }
+  .lead-form textarea { resize: vertical; min-height: 84px; }
+  .lead-form__consent { display: flex; gap: 10px; align-items: flex-start; font-size: 13.5px; color: var(--muted); cursor: pointer; }
+  .lead-form__consent input { width: auto; margin-top: 3px; accent-color: var(--terracotta); flex: none; }
+  .lead-form__consent a { color: var(--terracotta); text-decoration: underline; text-underline-offset: 3px; }
+  .lead-form__status { margin: 0; font-size: 14px; font-weight: 600; min-height: 1px; }
+  .lead-form__status.is-ok { color: var(--success); }
+  .lead-form__status.is-error { color: var(--danger); }
+  .lead-form .btn.is-loading { opacity: .7; pointer-events: none; }
+
+  @media (max-width: 880px) { .lead-section__inner { grid-template-columns: 1fr; } }
+</style>

@@ -1,0 +1,58 @@
+---
+interface Item { q: string; a: string }
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  items: Item[];
+  withSchema?: boolean;
+}
+const { eyebrow, title = 'Частые вопросы', subtitle, items, withSchema = true } = Astro.props;
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: items.map((it) => ({
+    '@type': 'Question',
+    name: it.q,
+    acceptedAnswer: { '@type': 'Answer', text: it.a },
+  })),
+};
+---
+<section class="faqs">
+  <div class="container faqs__inner">
+    <header class="section-head section-head--center">
+      {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+      {title && <h2 set:html={title} />}
+      {subtitle && <p class="lead">{subtitle}</p>}
+    </header>
+    <div class="faqs__list">
+      {items.map((it) => (
+        <details class="faq">
+          <summary><span>{it.q}</span><span class="faq__mark" aria-hidden="true"></span></summary>
+          <div class="faq__a"><p set:html={it.a} /></div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+{withSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
+
+<style>
+  .faqs { padding: var(--section-y) 0; }
+  .faqs__inner { display: grid; grid-template-columns: 1fr 1.3fr; gap: clamp(28px, 5vw, 64px); align-items: start; }
+  .faqs__inner .section-head { margin-bottom: 0; text-align: left; }
+  .faqs__inner .section-head .eyebrow::before { display: inline-block; }
+  .faqs__list { display: grid; gap: 10px; }
+  .faq { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; transition: border-color .18s ease; }
+  .faq[open] { border-color: var(--line-strong); }
+  .faq summary { cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 19px 22px; font-weight: 700; font-size: 16.5px; color: var(--ink); }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq__mark { position: relative; flex: 0 0 16px; height: 16px; }
+  .faq__mark::before, .faq__mark::after { content: ''; position: absolute; background: var(--terracotta); transition: transform .2s var(--ease); }
+  .faq__mark::before { top: 7px; left: 0; width: 16px; height: 2px; }
+  .faq__mark::after { top: 0; left: 7px; width: 2px; height: 16px; }
+  .faq[open] .faq__mark::after { transform: scaleY(0); }
+  .faq__a { padding: 0 22px 20px; }
+  .faq__a p { margin: 0; font-size: 15.5px; line-height: 1.65; color: var(--muted); }
+  @media (max-width: 880px) { .faqs__inner { grid-template-columns: 1fr; } .faqs__inner .section-head { margin-bottom: 8px; } }
+</style>

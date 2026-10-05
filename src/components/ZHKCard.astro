@@ -1,0 +1,56 @@
+---
+import Icon from './Icon.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  zhk: CollectionEntry<'zhk'>;
+}
+const { zhk } = Astro.props;
+const d = zhk.data;
+const url = `/novostroyki/${zhk.id}/`;
+---
+<article class="zhk-card">
+  <a class="zhk-card__media" href={url} aria-label={d.name}>
+    {d.image ? (
+      <img src={d.image} alt={`${d.name}, ${d.district} район Брянска`} loading="lazy" />
+    ) : (
+      <span class="zhk-card__placeholder" aria-hidden="true">
+        <Icon name="building" size={40} />
+      </span>
+    )}
+    <span class="zhk-card__district">{d.district}</span>
+  </a>
+  <div class="zhk-card__body">
+    <h3 class="zhk-card__title"><a href={url}>{d.shortName || d.name}</a></h3>
+    <div class="zhk-card__meta">
+      {d.type && <span>{d.type}</span>}
+      {d.class && <span>· {d.class} класс</span>}
+    </div>
+    <dl class="zhk-card__prices">
+      <div><dt>Цена от</dt><dd>{d.priceFrom}</dd></div>
+      <div><dt>Сдача</dt><dd>{d.delivery}</dd></div>
+    </dl>
+    <p class="zhk-card__note">Данные уточняются — актуальные цены и наличие по запросу.</p>
+    <a class="zhk-card__link" href={url}>Подробнее <Icon name="arrow-right" size={16} /></a>
+  </div>
+</article>
+
+<style>
+  .zhk-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow-sm); transition: transform .2s var(--ease), box-shadow .2s var(--ease); }
+  .zhk-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+  .zhk-card__media { position: relative; display: block; aspect-ratio: 16 / 10; background: var(--sand); overflow: hidden; }
+  .zhk-card__media img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s var(--ease); }
+  .zhk-card:hover .zhk-card__media img { transform: scale(1.04); }
+  .zhk-card__placeholder { position: absolute; inset: 0; display: grid; place-items: center; color: var(--terracotta); background: linear-gradient(150deg, var(--sand), var(--terracotta-soft)); }
+  .zhk-card__district { position: absolute; left: 12px; top: 12px; background: rgba(31,27,22,.82); color: #fff; font-size: 12.5px; font-weight: 700; padding: 5px 12px; border-radius: var(--r-pill); backdrop-filter: blur(4px); }
+  .zhk-card__body { padding: 20px 20px 22px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .zhk-card__title { margin: 0; font-size: 20px; }
+  .zhk-card__title a:hover { color: var(--terracotta); }
+  .zhk-card__meta { font-size: 14px; color: var(--muted); }
+  .zhk-card__prices { display: flex; gap: 22px; margin: 4px 0 0; padding: 12px 0 0; border-top: 1px solid var(--line); }
+  .zhk-card__prices dt { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted-2); font-weight: 700; }
+  .zhk-card__prices dd { margin: 3px 0 0; font-weight: 700; font-family: var(--font-display); font-size: 17px; }
+  .zhk-card__note { font-size: 12.5px; color: var(--muted-2); margin: 0; }
+  .zhk-card__link { margin-top: auto; display: inline-flex; align-items: center; gap: 8px; font-weight: 700; color: var(--terracotta); }
+  .zhk-card:hover .zhk-card__link { gap: 12px; }
+</style>

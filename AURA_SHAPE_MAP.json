@@ -1,0 +1,75 @@
+{
+  "source": "3-е фото (референс «МАКСИМУМ») + визитка «Макромир»",
+  "doctrine": "Шейпы копируются из источника, не берутся из библиотеки. Если в источнике нет stroke/shadow — не добавлять.",
+  "shapes": [
+    {
+      "id": "pill-button",
+      "sourceShape": "капсула (скруглённая кнопка)",
+      "technique": "border-radius: 999px",
+      "geometry": { "radius": "999px", "padding": "14px 26px" },
+      "stroke": false,
+      "shadow": "0 10px 24px rgba(180,85,45,.28) только для primary"
+    },
+    {
+      "id": "card",
+      "sourceShape": "скруглённый прямоугольник (карточка)",
+      "technique": "border-radius + 1px border",
+      "geometry": { "radius": "22px", "border": "1px solid #e6dccb" },
+      "stroke": true,
+      "shadow": "0 2px 8px rgba(31,27,22,.05)"
+    },
+    {
+      "id": "numbered-badge",
+      "sourceShape": "число 01–08 акцентным серифом (как нумерация в референсе)",
+      "technique": "текст Prata, цвет terracotta",
+      "geometry": { "fontSize": "30px", "minWidth": "48px" },
+      "stroke": false,
+      "shadow": false
+    },
+    {
+      "id": "circle-check",
+      "sourceShape": "круглый маркер списка",
+      "technique": "border-radius: 50%",
+      "geometry": { "size": "24px", "bg": "#f3e3d9", "color": "#b4552d" },
+      "stroke": false,
+      "shadow": false
+    },
+    {
+      "id": "icon-badge",
+      "sourceShape": "скруглённый квадрат под иконку",
+      "technique": "border-radius: 14px",
+      "geometry": { "size": "52px" },
+      "stroke": false,
+      "shadow": false
+    },
+    {
+      "id": "hero-glow",
+      "sourceShape": "мягкое органическое пятно/свечение",
+      "technique": "radial-gradient (blur без отдельного SVG)",
+      "geometry": { "position": "absolute", "opacity": "0.16–0.28" },
+      "stroke": false,
+      "shadow": "размытие через gradient, не box-shadow"
+    },
+    {
+      "id": "portrait-frame",
+      "sourceShape": "скруглённый прямоугольник 4:5",
+      "technique": "border-radius: 30px + object-fit: cover",
+      "geometry": { "radius": "30px", "aspect": "4 / 5" },
+      "stroke": false,
+      "shadow": "0 24px 60px rgba(31,27,22,.12)"
+    },
+    {
+      "id": "divider",
+      "sourceShape": "тонкая линия-разделитель",
+      "technique": "border-top: 1px solid",
+      "geometry": { "width": "1px", "color": "#e6dccb" },
+      "stroke": true,
+      "shadow": false
+    }
+  ],
+  "rejectedShapes": [
+    "звёзды/ромбы вместо органики (в источнике их нет)",
+    "жирные бруталистские рамки",
+    "жёсткие чёрные outline у капсул"
+  ]
+}

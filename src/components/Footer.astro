@@ -1,0 +1,92 @@
+---
+import { SITE, LEGAL } from '../consts';
+import Icon from './Icon.astro';
+const year = new Date().getFullYear();
+const cols = [
+  { title: 'Недвижимость', links: [
+    { label: 'Новостройки Брянска', href: '/novostroyki/' },
+    { label: 'Вторичное жильё', href: '/vtorichka/' },
+    { label: 'Дома и участки', href: '/zagorod/' },
+    { label: 'Услуги эксперта', href: '/uslugi/' },
+  ] },
+  { title: 'Обо мне', links: [
+    { label: 'Об эксперте', href: '/o-eksperte/' },
+    { label: 'Отзывы', href: '/otzyvy/' },
+    { label: 'Кейсы', href: '/keysy/' },
+    { label: 'Блог', href: '/blog/' },
+  ] },
+];
+---
+<footer class="footer">
+  <div class="container">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <div class="footer__brand-row">
+          <span class="footer__mark" aria-hidden="true">ОВ</span>
+          <div>
+            <div class="footer__name">{SITE.name}</div>
+            <div class="footer__role">{SITE.role} · {SITE.agency}</div>
+          </div>
+        </div>
+        <p class="footer__desc">{SITE.description}</p>
+        <div class="footer__socials">
+          <a href={SITE.vk} target="_blank" rel="noopener" aria-label="ВКонтакте"><Icon name="vk" size={22} fill /></a>
+          <a href={SITE.max} target="_blank" rel="noopener" aria-label="MAX"><Icon name="max" size={22} fill /></a>
+        </div>
+      </div>
+
+      {cols.map((col) => (
+        <nav class="footer__col" aria-label={col.title}>
+          <div class="footer__col-title">{col.title}</div>
+          <ul>
+            {col.links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+          </ul>
+        </nav>
+      ))}
+
+      <div class="footer__col footer__contacts">
+        <div class="footer__col-title">Контакты</div>
+        <a class="footer__contact" href={SITE.phoneHref}><Icon name="phone" size={18} /> {SITE.phone}</a>
+        <a class="footer__contact" href={`mailto:${SITE.email}`}><Icon name="mail" size={18} /> {SITE.email}</a>
+        <div class="footer__contact footer__contact--text"><Icon name="map-pin" size={18} /> {SITE.address}</div>
+        <a class="btn btn--primary btn--sm footer__cta" href="/#zayavka">Оставить заявку</a>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <p class="footer__legal">
+        {LEGAL.entityName}{LEGAL.ogrnip && `, ОГРНИП ${LEGAL.ogrnip}`}{LEGAL.inn && `, ИНН ${LEGAL.inn}`}, {LEGAL.address}.
+        <a href={SITE.policyPath}>Политика обработки персональных данных</a>.
+      </p>
+      <p class="footer__copy">© {year} {SITE.name}. Информация на сайте не является публичной офертой.</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer { background: var(--dark); color: var(--on-dark); padding: clamp(48px, 6vw, 76px) 0 26px; margin-top: 0; }
+  .footer a { color: var(--on-dark); }
+  .footer__top { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1.3fr; gap: clamp(24px, 4vw, 48px); }
+  .footer__brand-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .footer__mark { width: 46px; height: 46px; border-radius: 13px; display: grid; place-items: center; background: var(--terracotta); color: #fff; font-family: var(--font-display); font-size: 20px; }
+  .footer__name { font-family: var(--font-display); font-size: 20px; }
+  .footer__role { font-size: 12.5px; color: var(--on-dark-muted); font-weight: 600; }
+  .footer__desc { color: var(--on-dark-muted); font-size: 15px; max-width: 40ch; margin-bottom: 18px; }
+  .footer__socials { display: flex; gap: 10px; }
+  .footer__socials a { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; background: rgba(246,242,234,.08); border: 1px solid rgba(246,242,234,.14); transition: background .16s ease; }
+  .footer__socials a:hover { background: rgba(246,242,234,.16); }
+  .footer__col-title { font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: .1em; color: var(--ochre); margin-bottom: 14px; }
+  .footer__col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .footer__col a:hover { color: var(--ochre); }
+  .footer__contacts { display: flex; flex-direction: column; align-items: flex-start; gap: 11px; }
+  .footer__contact { display: inline-flex; align-items: flex-start; gap: 9px; font-weight: 600; font-size: 15px; }
+  .footer__contact svg { color: var(--ochre); flex: none; margin-top: 2px; }
+  .footer__contact--text { color: var(--on-dark-muted); font-weight: 500; font-size: 14.5px; }
+  .footer__cta { margin-top: 8px; }
+  .footer__bottom { margin-top: clamp(32px, 4vw, 52px); padding-top: 22px; border-top: 1px solid rgba(246,242,234,.12); display: grid; gap: 8px; }
+  .footer__legal { font-size: 13px; color: var(--on-dark-muted); margin: 0; max-width: 90ch; }
+  .footer__legal a { text-decoration: underline; text-underline-offset: 3px; }
+  .footer__copy { font-size: 13px; color: var(--on-dark-muted); margin: 0; }
+  @media (max-width: 980px) { .footer__top { grid-template-columns: 1fr 1fr; } .footer__brand { grid-column: 1 / -1; } }
+  @media (max-width: 560px) { .footer__top { grid-template-columns: 1fr; } }
+</style>

@@ -1,0 +1,57 @@
+{
+  "environment": "opencode",
+  "mcpKVAvailable": false,
+  "fallbackReason": "MCP KV (user-mcp-kv/gpt-image-2, recraft_remove_background) не сконфигурирован в среде. Применён осознанный fallback: собственные SVG-иконки, CSS-формы, локально сгенерированная OG-обложка, реальное фото эксперта (плейсхолдер до загрузки).",
+  "assets": [
+    {
+      "id": "portrait-olga",
+      "role": "hero / about / article author",
+      "path": "/images/olga.jpg",
+      "generationTool": "user-provided (не генерировать — E-E-A-T)",
+      "status": "placeholder — ожидает реальный файл",
+      "alt": "Ольга Валентинова, эксперт по недвижимости в Брянске"
+    },
+    {
+      "id": "og-default",
+      "role": "og:image",
+      "path": "/images/og-default.jpg",
+      "generationTool": "local (PowerShell System.Drawing, 1200x630)",
+      "status": "готов"
+    },
+    {
+      "id": "favicon",
+      "role": "favicon",
+      "path": "/favicon.svg",
+      "generationTool": "local SVG",
+      "status": "готов"
+    },
+    {
+      "id": "logo-makromir",
+      "role": "organization logo",
+      "path": "/images/logo.svg",
+      "generationTool": "local SVG (типографский лого)",
+      "status": "готов (заменить на официальный лого «Макромир» при наличии)"
+    },
+    {
+      "id": "portrait-fallback",
+      "role": "заглушка портрета при отсутствии файла",
+      "path": "src/components/Portrait.astro",
+      "generationTool": "fallback: CSS/SVG (инициалы «ОВ», onerror)",
+      "status": "готов"
+    },
+    {
+      "id": "zhk-photos",
+      "role": "карточки ЖК",
+      "path": "/images/zhk/<slug>.jpg",
+      "generationTool": "user-provided / открытые источники (права!)",
+      "status": "не предоставлены — используется типографическая заглушка"
+    },
+    {
+      "id": "icon-set",
+      "role": "UI-иконки",
+      "path": "src/components/Icon.astro",
+      "generationTool": "fallback: inline SVG (собственный набор)",
+      "status": "готов"
+    }
+  ]
+}

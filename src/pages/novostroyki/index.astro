@@ -1,0 +1,109 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ZHKCard from '../../components/ZHKCard.astro';
+import Faqs from '../../components/blocks/Faqs.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import { DISTRICTS } from '../../consts';
+import { zhkItemListGraph } from '../../lib/schema';
+
+const zhk = (await getCollection('zhk')).sort((a, b) => a.data.order - b.data.order);
+const districts = DISTRICTS.filter((d) => zhk.some((z) => z.data.district === d));
+const itemList = zhkItemListGraph(zhk.map((z) => ({ name: z.data.name, url: `/novostroyki/${z.id}/`, district: z.data.district })));
+
+const faq = [
+  { q: 'Какие новостройки есть в Брянске?', a: 'В подборке — ЖК «ПРАЙМ», клубный квартал «ГРИНВУД», НЕКСТ на Площади Партизан, ЖК «ОБЕРЕГ», ЖК «Дуки 46» и новые проекты. Список обновляется по мере выхода новых очередей.' },
+  { q: 'Сколько стоит квартира в новостройке Брянска?', a: 'Цена зависит от района, класса дома, площади и этапа строительства. Точные и актуальные цены уточняются у застройщиков — оставьте заявку, и я подберу варианты под ваш бюджет.' },
+  { q: 'Можно ли купить новостройку в ипотеку?', a: 'Да, в том числе по льготным программам. Помогу подобрать банк и программу, собрать документы и получить предварительное одобрение.' },
+  { q: 'Какой район Брянска выбрать для покупки новостройки?', a: 'Советский ближе к центру и роще «Соловьи», Бежицкий — доступнее по цене. Выбор зависит от работы, транспорта и образа жизни семьи — разберём на консультации.' },
+];
+---
+<BaseLayout
+  title="Новостройки Брянска — жилые комплексы и цены"
+  description="Новостройки Брянска: жилые комплексы Советского и Бежицкого районов, цены, планировки и сроки сдачи. Подбор квартиры в новостройке с экспертом Ольгой Валентиновой."
+  path="/novostroyki/"
+  schema={itemList}
+>
+  <Breadcrumbs items={[{ name: 'Новостройки Брянска', href: '/novostroyki/' }]} />
+
+  <section class="hub-hero">
+    <div class="container">
+      <p class="eyebrow">Новостройки</p>
+      <h1>Новостройки Брянска</h1>
+      <p class="lead">Жилые комплексы Брянска с ценами и планировками. Помогу выбрать район и ЖК, проверить застройщика и оформить ипотеку. Актуальные цены, сроки сдачи и наличие квартир уточняются — данные обновляются по запросу.</p>
+      <div class="hub-hero__actions">
+        <a class="btn btn--primary" href="#zayavka">Подобрать новостройку</a>
+        <a class="btn btn--ghost" href="#spisok">Смотреть список ЖК</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="spisok">
+    <div class="container">
+      {districts.length > 1 && (
+        <div class="filter" data-filter>
+          <button class="filter__btn is-active" data-district="all" type="button">Все районы</button>
+          {districts.map((d) => <button class="filter__btn" data-district={d} type="button">{d}</button>)}
+        </div>
+      )}
+
+      <div class="grid grid--3" data-zhk-grid>
+        {zhk.map((z) => (
+          <div class="zhk-wrap" data-district={z.data.district}>
+            <ZHKCard zhk={z} />
+          </div>
+        ))}
+      </div>
+      <p class="filter-empty muted" data-filter-empty hidden>В этом районе пока нет ЖК в подборке — оставьте заявку, подберу варианты.</p>
+    </div>
+  </section>
+
+  <section class="section section--paper2">
+    <div class="container container--narrow prose">
+      <h2>Как выбрать новостройку в Брянске</h2>
+      <p>Новостройки Брянска сосредоточены в основном в Советском и Бежицком районах. Советский тянется к центру и роще «Соловьи», Бежицкий предлагает более доступную цену за метр. При выборе важно смотреть не только на цену, но и на класс дома, срок сдачи, инфраструктуру и репутацию застройщика.</p>
+      <p>Перед покупкой проверьте проектную декларацию и схему продаж по 214-ФЗ, убедитесь в наличии эскроу-счёта. Я помогаю пройти этот путь без ошибок: от подбора под бюджет до приёмки квартиры у застройщика. Подробнее — в статье <a href="/blog/novostroyki-bryansk-kak-vybrat/">«Новостройки Брянска: как выбрать ЖК»</a>.</p>
+      <p>Отдельно стоит сравнить новостройку с готовым жильём: у обоих форматов свои плюсы и минусы. Если сомневаетесь, что выбрать, начните со статьи <a href="/blog/vtorichka-ili-novostroyka/">«Вторичка или новостройка в Брянске»</a>, а затем обсудим вашу ситуацию на консультации.</p>
+    </div>
+  </section>
+
+  <Faqs items={faq} eyebrow="Вопросы о новостройках" title="Частые вопросы о новостройках Брянска" />
+  <LeadForm title="Подберу новостройку под ваш бюджет" text="Оставьте контакты — подберу жилые комплексы Брянска под ваши задачи, бюджет и сроки. Консультация бесплатная." source="novostroyki" />
+
+  <script is:inline>
+    (function () {
+      var wrap = document.querySelector('[data-filter]');
+      if (!wrap) return;
+      var grid = document.querySelector('[data-zhk-grid]');
+      var empty = document.querySelector('[data-filter-empty]');
+      wrap.addEventListener('click', function (e) {
+        var btn = e.target.closest('[data-district]');
+        if (!btn) return;
+        var d = btn.getAttribute('data-district');
+        wrap.querySelectorAll('.filter__btn').forEach(function (b) { b.classList.toggle('is-active', b === btn); });
+        var shown = 0;
+        grid.querySelectorAll('[data-district]').forEach(function (item) {
+          var ok = d === 'all' || item.getAttribute('data-district') === d;
+          item.hidden = !ok;
+          if (ok) shown++;
+        });
+        if (empty) empty.hidden = shown !== 0;
+      });
+    })();
+  </script>
+
+  <style>
+    .hub-hero { padding: clamp(24px, 4vw, 48px) 0 clamp(20px, 3vw, 36px); }
+    .hub-hero h1 { margin-bottom: 16px; }
+    .hub-hero .lead { max-width: 70ch; }
+    .hub-hero__actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 26px; }
+    .filter { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 30px; }
+    .filter__btn { padding: 9px 18px; border-radius: var(--r-pill); border: 1.5px solid var(--line-strong); background: var(--surface); color: var(--ink-2); font-weight: 600; font-size: 14.5px; transition: all .16s ease; }
+    .filter__btn:hover { border-color: var(--ink); }
+    .filter__btn.is-active { background: var(--ink); color: var(--on-dark); border-color: var(--ink); }
+    .zhk-wrap { display: flex; }
+    .zhk-wrap > * { width: 100%; }
+    .filter-empty { margin-top: 24px; }
+  </style>
+</BaseLayout>

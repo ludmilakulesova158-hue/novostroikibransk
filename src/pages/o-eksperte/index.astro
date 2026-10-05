@@ -1,0 +1,122 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Faqs from '../../components/blocks/Faqs.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import CallToAction from '../../components/blocks/CallToAction.astro';
+import Portrait from '../../components/Portrait.astro';
+import Icon from '../../components/Icon.astro';
+import { SITE } from '../../consts';
+import { personNode, realEstateAgentNode } from '../../lib/schema';
+
+const stats = [
+  { value: 'Новостройки', label: 'подбор и ипотека' },
+  { value: 'Вторичка', label: 'проверка и сделки' },
+  { value: 'Загород', label: 'дома и участки' },
+];
+
+const principles = [
+  { icon: 'search', title: 'Честная оценка', text: 'Называю реальную цену по сделкам района, а не завышенную «для рекламы».' },
+  { icon: 'shield', title: 'Проверяю всё', text: 'Объект, застройщика, документы и землю — до того, как вы внесёте деньги.' },
+  { icon: 'chat', title: 'На связи', text: 'Отвечаю на вопросы и держу в курсе на каждом этапе сделки.' },
+  { icon: 'key', title: 'Довожу до ключей', text: 'Сопровождаю сделку целиком, а не только до подписания договора.' },
+];
+
+const faq = [
+  { q: 'Какой у вас опыт в недвижимости?', a: 'Работаю с недвижимостью в Брянске и области: новостройки, вторичка и загородные объекты. Полный список услуг и отзывы — на этой странице и на площадке «Макромир».' },
+  { q: 'Вы работаете как агентство или частный эксперт?', a: 'Я эксперт по недвижимости в агентстве «Макромир». Это значит, что за моей работой стоят проверенные партнёры, юристы и банки-партнёры.' },
+  { q: 'В каких районах вы работаете?', a: 'Брянск (Бежицкий, Володарский, Советский, Фокинский районы) и Брянская область, включая Брянский район.' },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [personNode(), realEstateAgentNode()],
+};
+---
+<BaseLayout
+  title="Об эксперте — Ольга Валентинова"
+  description="Ольга Валентинова — эксперт по недвижимости в Брянске, агентство «Макромир». Опыт в новостройках, вторичке и загородной недвижимости, полное сопровождение сделки."
+  path="/o-eksperte/"
+  schema={schema}
+>
+  <Breadcrumbs items={[{ name: 'Об эксперте', href: '/o-eksperte/' }]} />
+
+  <section class="expert-hero">
+    <div class="container expert-hero__inner">
+      <Portrait
+        src="/images/olga.jpg"
+        alt="Ольга Валентинова — эксперт по недвижимости в Брянске"
+        width={640}
+        height={760}
+        eager
+        class="expert-hero__media"
+      />
+      <div class="expert-hero__text">
+        <p class="eyebrow">Об эксперте</p>
+        <h1>Ольга Валентинова</h1>
+        <p class="lead">Эксперт по недвижимости в Брянске и агентстве «Макромир». Помогаю покупать и продавать квартиры, дома и участки — выгодно, спокойно и безопасно.</p>
+        <div class="expert-hero__stats">
+          {stats.map((s) => (
+            <div class="expert-stat"><span class="expert-stat__value">{s.value}</span><span class="expert-stat__label">{s.label}</span></div>
+          ))}
+        </div>
+        <div class="expert-hero__contacts">
+          <a class="btn btn--primary" href={SITE.phoneHref}><Icon name="phone" size={18} /> {SITE.phone}</a>
+          <a class="btn btn--ghost" href={SITE.vk} target="_blank" rel="noopener"><Icon name="vk" size={18} fill /> ВКонтакте</a>
+          <a class="btn btn--ghost" href={SITE.max} target="_blank" rel="noopener"><Icon name="max" size={18} fill /> MAX</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--paper2">
+    <div class="container">
+      <header class="section-head"><p class="eyebrow">Принципы работы</p><h2>Как я отношусь к своей работе</h2></header>
+      <div class="grid grid--2">
+        {principles.map((p) => (
+          <article class="card principle">
+            <span class="icon-badge"><Icon name={p.icon} size={24} /></span>
+            <div><h3>{p.title}</h3><p>{p.text}</p></div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container--narrow prose">
+      <h2>Почему со мной удобно</h2>
+      <p>Я живу и работаю в Брянске и знаю город не по картам: какие ЖК строятся, как меняется цена по районам, где застройщик держит сроки, а где стоит задавать вопросы. Клиенты обращаются ко мне, когда хотят не «поиск по объявлениям», а экспертный разбор ситуации и защиту своих интересов на сделке.</p>
+      <p>Основа работы — прозрачность. Вы всегда знаете, на каком этапе сделка, какие документы проверены и что будет дальше. Мой офис — ул. Дуки, 63, ТЦ «Соловьи», 2 этаж; работаю по Брянску и области.</p>
+      <p>Я не работаю «на потоке»: беру ограниченное число клиентов, чтобы каждому уделить время. Это значит, что вы всегда можете позвонить, задать вопрос и получить ответ — а не ждать, пока освободится менеджер. Такой формат позволяет доводить сделки до результата и сохранять доверие клиентов на годы.</p>
+      <p>Мне важно, чтобы после сделки у вас не осталось неприятного осадка. Поэтому я предпочитаю честно сказать, если объект не стоит своих денег, и предложить альтернативу — даже если это означает, что сделка состоится позже. Репутация в небольшом городе важнее быстрой выгоды.</p>
+    </div>
+  </section>
+
+  <section class="section section--paper2">
+    <div class="container container--narrow prose">
+      <h2>Как проходит работа со мной</h2>
+      <p>Всё начинается с консультации: вы описываете задачу, а я задаю уточняющие вопросы — о бюджете, сроках, составе семьи и приоритетах. По итогу вы получаете понятный план: что делать, в каком порядке и чего ожидать по цене и срокам. Никаких навязанных услуг — только то, что реально нужно в вашей ситуации.</p>
+      <p>Дальше идёт подбор или оценка объекта, проверка, ипотека и сопровождение сделки. Я держу вас в курсе на каждом этапе и беру на себя переговоры с продавцом, банком и застройщиком. Ваша задача — принимать решения, моя — сделать путь к ним максимально простым и безопасным.</p>
+    </div>
+  </section>
+
+  <Faqs items={faq} eyebrow="Вопросы" title="Частые вопросы" />
+  <LeadForm title="Познакомимся на консультации" text="Расскажите о задаче — отвечу на вопросы и предложу план действий. Консультация бесплатная." source="about" />
+  <CallToAction title="Обсудим вашу недвижимость" text="Покупка, продажа, ипотека или проверка объекта — помогу разобраться." secondary={{ text: 'Отзывы', href: '/otzyvy/' }} />
+
+  <style>
+    .expert-hero { padding: clamp(24px, 4vw, 56px) 0; }
+    .expert-hero__inner { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: clamp(28px, 5vw, 64px); align-items: center; }
+    .expert-hero__media { border-radius: var(--r-xl); aspect-ratio: 4 / 5; box-shadow: var(--shadow-lg); }
+    .expert-hero__stats { display: flex; gap: 26px; flex-wrap: wrap; margin: 24px 0; }
+    .expert-stat { display: flex; flex-direction: column; }
+    .expert-stat__value { font-family: var(--font-display); font-size: 22px; color: var(--terracotta); }
+    .expert-stat__label { font-size: 13.5px; color: var(--muted); font-weight: 600; }
+    .expert-hero__contacts { display: flex; gap: 12px; flex-wrap: wrap; }
+    .principle { display: flex; gap: 16px; align-items: flex-start; }
+    .principle h3 { margin: 2px 0 6px; font-size: 20px; }
+    .principle p { margin: 0; color: var(--muted); font-size: 15.5px; }
+    @media (max-width: 880px) { .expert-hero__inner { grid-template-columns: 1fr; } .expert-hero__media { max-width: 380px; margin: 0 auto; width: 100%; } }
+  </style>
+</BaseLayout>

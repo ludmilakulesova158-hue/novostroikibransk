@@ -1,0 +1,33 @@
+User-agent: *
+Allow: /
+Disallow: /politika-konfidencialnosti/
+Clean-param: utm_source&utm_medium&utm_campaign&utm_term&utm_content&yclid&gclid
+
+# AI-боты (GEO): разрешаем индексацию и цитирование
+User-agent: GPTBot
+Allow: /
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: Claude-Web
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+User-agent: YandexAdditional
+Allow: /
+User-agent: YandexGPT
+Allow: /
+User-agent: Applebot-Extended
+Allow: /
+
+# Скрейпер, не приносящий трафика
+User-agent: Bytespider
+Disallow: /
+
+Sitemap: https://novostroikibransk.ru/sitemap-index.xml
+Host: https://novostroikibransk.ru

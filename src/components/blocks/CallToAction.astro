@@ -1,0 +1,37 @@
+---
+import Icon from '../Icon.astro';
+interface Props {
+  title: string;
+  text?: string;
+  primary?: { text: string; href: string };
+  secondary?: { text: string; href: string };
+}
+const {
+  title,
+  text,
+  primary = { text: 'Бесплатная консультация', href: '#zayavka' },
+  secondary,
+} = Astro.props;
+---
+<section class="cta">
+  <div class="container">
+    <div class="cta__box">
+      <span class="cta__glow" aria-hidden="true"></span>
+      <h2 class="cta__title" set:html={title} />
+      {text && <p class="cta__text" set:html={text} />}
+      <div class="cta__actions">
+        <a class="btn btn--primary" href={primary.href}>{primary.text} <Icon name="arrow-right" size={19} /></a>
+        {secondary && <a class="btn btn--on-dark-ghost" href={secondary.href}>{secondary.text}</a>}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta { padding: clamp(20px, 3vw, 36px) 0 var(--section-y); }
+  .cta__box { position: relative; overflow: clip; background: var(--dark); color: var(--on-dark); border-radius: var(--r-xl); padding: clamp(34px, 5vw, 64px); text-align: center; }
+  .cta__glow { position: absolute; inset: -40% -10% auto auto; width: 460px; height: 460px; background: radial-gradient(50% 50% at 50% 50%, rgba(192,138,46,.28), transparent 70%); }
+  .cta__title { position: relative; margin: 0 0 12px; color: var(--on-dark); }
+  .cta__text { position: relative; color: var(--on-dark-muted); font-size: 17px; max-width: 52ch; margin: 0 auto 28px; }
+  .cta__actions { position: relative; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+</style>

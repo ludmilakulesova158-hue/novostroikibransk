@@ -1,0 +1,141 @@
+---
+import { SITE, NAV } from '../consts';
+import Icon from './Icon.astro';
+const current = Astro.url.pathname;
+const isActive = (href: string) => current === href || (href !== '/' && current.startsWith(href));
+---
+<header class="site-header" data-header>
+  <div class="container site-header__inner">
+    <a class="brand" href="/" aria-label="{SITE.name} — на главную">
+      <span class="brand__mark" aria-hidden="true">ОВ</span>
+      <span class="brand__text">
+        <span class="brand__name">{SITE.name}</span>
+        <span class="brand__role">{SITE.role} · Брянск</span>
+      </span>
+    </a>
+
+    <nav class="nav" aria-label="Основная навигация">
+      <ul class="nav__list">
+        {NAV.map((item) => (
+          <li>
+            <a href={item.href} class:list={['nav__link', { 'is-active': isActive(item.href) }]} aria-current={isActive(item.href) ? 'page' : undefined}>
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="site-header__actions">
+      <a class="header-phone" href={SITE.phoneHref}>
+        <Icon name="phone" size={18} />
+        <span>{SITE.phone}</span>
+      </a>
+      <a class="btn btn--primary btn--sm header-cta" href="/#zayavka">Консультация</a>
+      <button class="burger" type="button" aria-label="Открыть меню" aria-expanded="false" data-burger>
+        <Icon name="menu" size={26} class="burger__open" />
+        <Icon name="close" size={26} class="burger__close" />
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-menu" data-mobile-menu hidden>
+    <div class="container">
+      <ul class="mobile-menu__list">
+        {NAV.map((item) => (
+          <li><a href={item.href} class:list={['mobile-menu__link', { 'is-active': isActive(item.href) }]}>{item.label}</a></li>
+        ))}
+      </ul>
+      <div class="mobile-menu__foot">
+        <a class="btn btn--primary btn--block" href="/#zayavka">Бесплатная консультация</a>
+        <a class="mobile-menu__phone" href={SITE.phoneHref}><Icon name="phone" size={18} /> {SITE.phone}</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script is:inline>
+  (function () {
+    var burger = document.querySelector('[data-burger]');
+    var menu = document.querySelector('[data-mobile-menu]');
+    if (!burger || !menu) return;
+    function setOpen(open) {
+      burger.setAttribute('aria-expanded', String(open));
+      menu.hidden = !open;
+      document.documentElement.classList.toggle('menu-open', open);
+    }
+    burger.addEventListener('click', function () {
+      setOpen(menu.hidden);
+    });
+    menu.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () { setOpen(false); });
+    });
+    var header = document.querySelector('[data-header]');
+    if (header) {
+      var onScroll = function () { header.classList.toggle('is-scrolled', window.scrollY > 8); };
+      onScroll();
+      window.addEventListener('scroll', onScroll, { passive: true });
+    }
+  })();
+</script>
+
+<style>
+  .site-header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(246, 242, 234, 0.86);
+    backdrop-filter: saturate(1.4) blur(12px);
+    border-bottom: 1px solid transparent;
+    transition: border-color .2s ease, background .2s ease;
+  }
+  .site-header.is-scrolled { border-bottom-color: var(--line); background: rgba(246, 242, 234, 0.94); }
+  .site-header__inner { display: flex; align-items: center; gap: 22px; min-height: 76px; }
+
+  .brand { display: flex; align-items: center; gap: 12px; flex: none; min-width: 0; }
+  .brand__mark {
+    width: 44px; height: 44px; border-radius: 13px; display: grid; place-items: center;
+    background: var(--terracotta); color: #fff; font-family: var(--font-display); font-size: 19px;
+    letter-spacing: .02em;
+  }
+  .brand__text { display: flex; flex-direction: column; line-height: 1.18; min-width: 0; }
+  .brand__name { font-family: var(--font-display); font-size: 19px; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 42vw; }
+  .brand__role { font-size: 12px; color: var(--muted); font-weight: 600; letter-spacing: .02em; }
+
+  .nav { margin-left: auto; }
+  .nav__list { display: flex; align-items: center; gap: 4px; list-style: none; margin: 0; padding: 0; }
+  .nav__link {
+    display: block; padding: 9px 13px; border-radius: var(--r-pill); font-size: 15px; font-weight: 600;
+    color: var(--ink-2); transition: background .16s ease, color .16s ease;
+  }
+  .nav__link:hover { background: var(--paper-2); }
+  .nav__link.is-active { color: var(--terracotta); background: var(--terracotta-soft); }
+
+  .site-header__actions { display: flex; align-items: center; gap: 12px; flex: none; }
+  .header-phone { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 15px; color: var(--ink); white-space: nowrap; }
+  .header-phone:hover { color: var(--terracotta); }
+
+  .burger { display: none; width: 46px; height: 46px; border-radius: 12px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); place-items: center; }
+  .burger__close { display: none; }
+  [aria-expanded='true'] .burger__open { display: none; }
+  [aria-expanded='true'] .burger__close { display: block; }
+
+  .mobile-menu { border-top: 1px solid var(--line); background: var(--paper); }
+  .mobile-menu__list { list-style: none; margin: 0; padding: 14px 0 4px; display: grid; gap: 2px; }
+  .mobile-menu__link { display: block; padding: 13px 14px; border-radius: var(--r); font-size: 17px; font-weight: 600; color: var(--ink); }
+  .mobile-menu__link.is-active { background: var(--terracotta-soft); color: var(--terracotta); }
+  .mobile-menu__foot { padding: 12px 0 22px; display: grid; gap: 12px; }
+  .mobile-menu__phone { display: inline-flex; align-items: center; gap: 8px; justify-content: center; font-weight: 700; }
+
+  @media (max-width: 1080px) {
+    .nav { display: none; }
+    .burger { display: grid; }
+    .header-cta { display: none; }
+  }
+  @media (max-width: 620px) {
+    .header-phone span { display: none; }
+    .header-phone { padding: 10px; border: 1px solid var(--line-strong); border-radius: 12px; }
+    .brand__role { display: none; }
+  }
+  @media (max-width: 420px) {
+    .brand__name { display: none; }
+  }
+</style>

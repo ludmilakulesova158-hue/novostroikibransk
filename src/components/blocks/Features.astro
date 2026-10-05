@@ -1,0 +1,47 @@
+---
+import Icon from '../Icon.astro';
+
+interface Item { icon: string; title: string; text: string; href?: string }
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  items: Item[];
+  columns?: 2 | 3 | 4;
+}
+const { eyebrow, title, subtitle, items, columns = 3 } = Astro.props;
+---
+<section class="features">
+  <div class="container">
+    {(eyebrow || title || subtitle) && (
+      <header class="section-head section-head--center">
+        {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+        {title && <h2 set:html={title} />}
+        {subtitle && <p class="lead">{subtitle}</p>}
+      </header>
+    )}
+    <div class:list={['grid', `grid--${columns}`]}>
+      {items.map((it) => {
+        const Tag = it.href ? 'a' : 'article';
+        return (
+          <Tag class:list={['feature card', { 'feature--link': it.href }]} href={it.href}>
+            <span class="icon-badge"><Icon name={it.icon} size={26} /></span>
+            <h3>{it.title}</h3>
+            <p set:html={it.text} />
+            {it.href && <span class="feature__more">Подробнее <Icon name="arrow-right" size={16} /></span>}
+          </Tag>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<style>
+  .features { padding: var(--section-y) 0; }
+  .feature { display: flex; flex-direction: column; gap: 14px; height: 100%; }
+  .feature h3 { margin: 4px 0 0; font-size: 21px; }
+  .feature p { margin: 0; color: var(--muted); font-size: 15.5px; }
+  .feature--link { transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease); }
+  .feature--link:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--line-strong); }
+  .feature__more { margin-top: auto; display: inline-flex; align-items: center; gap: 8px; font-weight: 700; color: var(--terracotta); font-size: 15px; }
+</style>

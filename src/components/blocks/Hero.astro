@@ -1,0 +1,90 @@
+---
+import Icon from '../Icon.astro';
+import Portrait from '../Portrait.astro';
+import { SITE } from '../../consts';
+
+interface Props {
+  title?: string;
+  subtitle?: string;
+}
+const {
+  title = 'Купить или продать недвижимость в Брянске <span class="hl">спокойно и с выгодой</span>',
+  subtitle = 'Новостройки, вторичное жильё и загородные дома. Подберу под бюджет, проверю объект, одобрю ипотеку и проведу сделку «под ключ» — от показов до ключей.',
+} = Astro.props;
+
+const badges = ['Новостройки', 'Вторичка', 'Загород', 'Ипотека', 'Проверка объекта'];
+---
+<section class="hero">
+  <span class="hero__glow" aria-hidden="true"></span>
+  <div class="container hero__inner">
+    <div class="hero__text">
+      <p class="eyebrow">{SITE.role} · {SITE.city}</p>
+      <h1 class="hero__title" set:html={title} />
+      <p class="hero__sub">{subtitle}</p>
+      <div class="hero__cta">
+        <a class="btn btn--primary" href="#zayavka">Бесплатная консультация <Icon name="arrow-right" size={19} /></a>
+        <a class="btn btn--ghost" href="/novostroyki/">Новостройки Брянска</a>
+      </div>
+      <ul class="hero__badges">
+        {badges.map((b) => <li><span class="hero__badge-dot" aria-hidden="true"></span>{b}</li>)}
+      </ul>
+    </div>
+
+    <div class="hero__media">
+      <Portrait
+        src="/images/olga.jpg"
+        alt="Ольга Валентинова, эксперт по недвижимости в Брянске"
+        width={640}
+        height={760}
+        eager
+        class="hero__photo"
+      />
+      <div class="hero__card hero__card--agency">
+        <span class="icon-badge icon-badge--ochre"><Icon name="building" size={24} /></span>
+        <div>
+          <strong>{SITE.agency}</strong>
+          <span>Проверенные застройщики и объекты Брянска</span>
+        </div>
+      </div>
+      <div class="hero__card hero__card--reviews">
+        <div class="hero__stars" aria-hidden="true">
+          <Icon name="star" size={16} /><Icon name="star" size={16} /><Icon name="star" size={16} /><Icon name="star" size={16} /><Icon name="star" size={16} />
+        </div>
+        <div><strong>Отзывы покупателей</strong><span>на площадке «Макромир» и во ВКонтакте</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero { position: relative; padding: clamp(40px, 6vw, 84px) 0 clamp(48px, 7vw, 92px); overflow: clip; }
+  .hero__glow { position: absolute; inset: -20% 40% auto -10%; height: 620px; background: radial-gradient(60% 60% at 30% 30%, rgba(192,138,46,.16), transparent 70%); pointer-events: none; }
+  .hero__inner { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(30px, 5vw, 64px); align-items: center; position: relative; }
+  .hero__title { margin: 0 0 20px; }
+  .hero__sub { font-size: clamp(17px, 2.1vw, 20px); color: var(--muted); max-width: 46ch; margin: 0 0 30px; }
+  .hero__cta { display: flex; flex-wrap: wrap; gap: 12px; }
+  .hero__badges { list-style: none; display: flex; flex-wrap: wrap; gap: 10px 18px; margin: 30px 0 0; padding: 0; }
+  .hero__badges li { display: inline-flex; align-items: center; gap: 8px; font-size: 14.5px; font-weight: 600; color: var(--ink-2); }
+  .hero__badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--terracotta); }
+
+  .hero__media { position: relative; }
+  .hero__photo { border-radius: var(--r-xl); aspect-ratio: 4 / 5; box-shadow: var(--shadow-lg); }
+
+  .hero__card { position: absolute; z-index: 2; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 14px 16px; box-shadow: var(--shadow); display: flex; gap: 12px; align-items: center; max-width: 268px; }
+  .hero__card strong { display: block; font-size: 14.5px; }
+  .hero__card span { display: block; font-size: 12.5px; color: var(--muted); line-height: 1.4; }
+  .hero__card--agency { left: -18px; bottom: 76px; }
+  .hero__card--reviews { right: -14px; bottom: 6px; }
+  .hero__stars { color: var(--ochre); display: flex; gap: 1px; flex: none; }
+
+  @media (max-width: 900px) {
+    .hero__inner { grid-template-columns: 1fr; }
+    .hero__media { order: -1; max-width: 420px; margin: 0 auto; width: 100%; }
+    .hero__card--agency { left: 8px; bottom: 60px; }
+    .hero__card--reviews { right: 8px; bottom: -8px; }
+  }
+  @media (max-width: 520px) {
+    .hero__card--agency { display: none; }
+    .hero__card--reviews { left: 8px; right: auto; max-width: 240px; }
+  }
+</style>

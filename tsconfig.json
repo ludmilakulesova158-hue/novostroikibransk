@@ -1,0 +1,10 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": false,
+    "verbatimModuleSyntax": false
+  },
+  "include": [".astro/types.d.ts", "**/*"],
+  "exclude": ["dist", "scripts"]
+}

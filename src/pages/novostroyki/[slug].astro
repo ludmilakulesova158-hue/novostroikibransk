@@ -1,0 +1,151 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ZHKCard from '../../components/ZHKCard.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import Icon from '../../components/Icon.astro';
+import { SITE } from '../../consts';
+import { breadcrumbsNode } from '../../lib/schema';
+
+export async function getStaticPaths() {
+  const zhk = await getCollection('zhk');
+  return zhk.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry, all: zhk },
+  }));
+}
+
+const { entry, all } = Astro.props;
+const d = entry.data;
+const shortName = d.shortName || d.name;
+const url = `/novostroyki/${entry.id}/`;
+const pageTitle = d.district.includes('уточняется')
+  ? `${shortName} — новостройка в Брянске`
+  : `${shortName} — ${d.district} район Брянска`;
+const others = all
+  .filter((z) => z.id !== entry.id && z.data.district === d.district)
+  .slice(0, 3);
+const similar = (others.length ? others : all.filter((z) => z.id !== entry.id).slice(0, 3));
+
+const complexSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ApartmentComplex',
+  name: d.name,
+  description: d.description,
+  url: new URL(url, Astro.site).href,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: SITE.city,
+    addressRegion: `Брянская область, ${d.district} район`,
+    streetAddress: d.address,
+    addressCountry: 'RU',
+  },
+};
+---
+<BaseLayout
+  title={pageTitle}
+  description={`${d.name}: ${d.district} район Брянска, ${d.type || 'новостройка'}. Цены, планировки и сроки сдачи — уточняются. Подбор квартиры с экспертом.`}
+  path={url}
+  schema={[complexSchema, breadcrumbsNode([
+    { name: 'Новостройки Брянска', href: '/novostroyki/' },
+    { name: d.shortName || d.name, href: url },
+  ])]}
+>
+  <Breadcrumbs items={[
+    { name: 'Новостройки Брянска', href: '/novostroyki/' },
+    { name: d.shortName || d.name, href: url },
+  ]} withSchema={false} />
+
+  <section class="zhk-detail">
+    <div class="container zhk-detail__inner">
+      <div class="zhk-detail__media">
+        {d.image ? (
+          <img src={d.image} alt={`${d.name}, ${d.district} район Брянска`} width="720" height="540" loading="eager" />
+        ) : (
+          <span class="zhk-detail__placeholder" aria-hidden="true"><Icon name="building" size={72} /></span>
+        )}
+      </div>
+      <div class="zhk-detail__info">
+        <span class="tag tag--terracotta">{d.district} район</span>
+        <h1>{d.name}</h1>
+        <p class="lead">{d.description}</p>
+        <dl class="zhk-detail__specs">
+          <div><dt>Район</dt><dd>{d.district}</dd></div>
+          {d.address && <div><dt>Адрес</dt><dd>{d.address}</dd></div>}
+          {d.type && <div><dt>Тип дома</dt><dd>{d.type}</dd></div>}
+          {d.class && <div><dt>Класс</dt><dd>{d.class}</dd></div>}
+          <div><dt>Статус</dt><dd>{d.status}</dd></div>
+          <div><dt>Срок сдачи</dt><dd>{d.delivery}</dd></div>
+          <div><dt>Цена от</dt><dd>{d.priceFrom}</dd></div>
+        </dl>
+        <p class="zhk-detail__note"><Icon name="check" size={16} /> Данные уточняются: актуальные цены, планировки и наличие квартир — по запросу.</p>
+        <div class="zhk-detail__actions">
+          <a class="btn btn--primary" href="#zayavka">Узнать цены и планировки</a>
+          <a class="btn btn--ghost" href={SITE.phoneHref}>Позвонить</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {d.features.length > 0 && (
+    <section class="section section--tight">
+      <div class="container">
+        <h2 class="zhk-detail__h2">Особенности комплекса</h2>
+        <ul class="zhk-features">
+          {d.features.map((f) => <li><Icon name="check" size={18} /> {f}</li>)}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  <section class="section section--paper2">
+    <div class="container container--narrow prose">
+      <h2>О комплексе</h2>
+      <p>{d.description}</p>
+      {d.rooms.length > 0 && <p>В комплексе представлены квартиры: {d.rooms.map((r) => `${r}-комнатные`).join(', ')}.</p>}
+      <p>Чтобы узнать актуальные цены, свободные лоты и условия покупки — оставьте заявку. Я предоставлю проверенную информацию от застройщика, помогу с ипотекой и проведу сделку «под ключ».</p>
+    </div>
+  </section>
+
+  {similar.length > 0 && (
+    <section class="section">
+      <div class="container">
+        <header class="section-head">
+          <p class="eyebrow">Ещё в Брянске</p>
+          <h2>Другие новостройки</h2>
+        </header>
+        <div class="grid grid--3">
+          {similar.map((z) => <ZHKCard zhk={z} />)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <LeadForm
+    title={`Узнать цены по ${d.shortName || d.name}`}
+    text="Оставьте контакты — пришлю актуальные цены, планировки и условия покупки, помогу с ипотекой."
+    source={`zhk:${entry.id}`}
+  />
+
+  <style>
+    .zhk-detail { padding: clamp(20px, 3vw, 40px) 0 clamp(10px, 2vw, 20px); }
+    .zhk-detail__inner { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 4vw, 56px); align-items: start; }
+    .zhk-detail__media { border-radius: var(--r-xl); overflow: hidden; aspect-ratio: 4 / 3; background: var(--sand); }
+    .zhk-detail__media img { width: 100%; height: 100%; object-fit: cover; }
+    .zhk-detail__placeholder { display: grid; place-items: center; width: 100%; height: 100%; color: var(--terracotta); background: linear-gradient(150deg, var(--sand), var(--terracotta-soft)); }
+    .zhk-detail__info h1 { margin: 14px 0 14px; }
+    .zhk-detail__specs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; margin: 10px 0 18px; }
+    .zhk-detail__specs > div { background: var(--surface); padding: 13px 16px; }
+    .zhk-detail__specs dt { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted-2); font-weight: 700; }
+    .zhk-detail__specs dd { margin: 4px 0 0; font-weight: 700; font-family: var(--font-display); font-size: 17px; }
+    .zhk-detail__note { display: flex; gap: 9px; align-items: center; font-size: 14.5px; color: var(--muted); background: var(--ochre-soft); padding: 12px 16px; border-radius: var(--r-sm); }
+    .zhk-detail__note svg { color: var(--ochre-dark); flex: none; }
+    .zhk-detail__actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
+    .zhk-detail__h2 { margin-bottom: 22px; }
+    .zhk-features { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .zhk-features li { display: flex; gap: 10px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 16px 18px; font-weight: 600; }
+    .zhk-features svg { color: var(--terracotta); flex: none; }
+    @media (max-width: 880px) { .zhk-detail__inner { grid-template-columns: 1fr; } .zhk-features { grid-template-columns: 1fr; } .zhk-detail__specs { grid-template-columns: 1fr 1fr; } }
+  </style>
+</BaseLayout>

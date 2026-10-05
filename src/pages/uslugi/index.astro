@@ -1,0 +1,60 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Icon from '../../components/Icon.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import CallToAction from '../../components/blocks/CallToAction.astro';
+
+const uslugi = (await getCollection('uslugi')).sort((a, b) => a.data.order - b.data.order);
+---
+<BaseLayout
+  title="Услуги эксперта по недвижимости в Брянске"
+  description="Услуги эксперта по недвижимости в Брянске: продажа, подбор квартиры, ипотека за 1 день, сделка «под ключ», trade-in и проверка юридической чистоты объекта."
+  path="/uslugi/"
+>
+  <Breadcrumbs items={[{ name: 'Услуги', href: '/uslugi/' }]} />
+
+  <section class="page-hero">
+    <div class="container">
+      <p class="eyebrow">Услуги</p>
+      <h1>Услуги эксперта по недвижимости</h1>
+      <p class="lead">Полный цикл: продажа, подбор, ипотека, проверка объекта и сопровождение сделки. Беру на себя рутину и защищаю ваши интересы на каждом этапе.</p>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container container--narrow prose" style="margin-bottom: 34px">
+      <p>Недвижимость — это крупная сделка с юридическими и финансовыми деталями, в которых легко ошибиться. Моя задача — взять эти детали на себя и провести вас по процессу от первого вопроса до ключей. Вы получаете одного эксперта вместо десятка посредников: подбор, оценка, проверка, ипотека и оформление — в одних руках.</p>
+      <p>Услуги можно брать по отдельности или целиком. Если вы только начинаете и не знаете, с чего стартовать, — начните с бесплатной консультации: я разберу вашу ситуацию и предложу, какой формат подойдёт. Ниже — основные направления работы.</p>
+      <p>Покупателям чаще всего нужны подбор, проверка и ипотека. Продавцам — оценка, подготовка и сопровождение сделки. Тем, кто меняет жильё, — trade-in. А тем, кто ещё не определился, — консультация, после которой становится понятно, куда двигаться и сколько это будет стоить. Выберите то, что ближе к вашей задаче, или просто позвоните — помогу сориентироваться.</p>
+      <p>Все услуги построены вокруг одного принципа: вы принимаете решения, я делаю работу. Никаких скрытых платежей и навязанных опций — объём и стоимость обсуждаем заранее. Работаю по Брянску и области, в том числе с новостройками, вторичкой и загородными объектами.</p>
+    </div>
+    <div class="container">
+      <div class="grid grid--3">
+        {uslugi.map((s) => (
+          <a class="service-card card" href={`/uslugi/${s.id}/`}>
+            <span class="icon-badge"><Icon name={s.data.icon} size={26} /></span>
+            <h2 class="service-card__title">{s.data.title}</h2>
+            <p>{s.data.tldr ?? s.data.description}</p>
+            <span class="service-card__more">Подробнее <Icon name="arrow-right" size={16} /></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <LeadForm title="Не знаете, с чего начать?" text="Опишите задачу — подскажу, какая услуга подойдёт, и что делать дальше. Консультация бесплатная." source="uslugi" />
+  <CallToAction title='Работаю по Брянску <span class="hl">и области</span>' text="Позвоните или оставьте заявку — отвечу на вопросы по вашей ситуации." secondary={{ text: 'Все новостройки', href: '/novostroyki/' }} />
+
+  <style>
+    .page-hero { padding: clamp(24px, 4vw, 48px) 0 clamp(20px, 3vw, 36px); }
+    .page-hero h1 { margin-bottom: 16px; }
+    .page-hero .lead { max-width: 68ch; }
+    .service-card { display: flex; flex-direction: column; gap: 14px; transition: transform .2s var(--ease), box-shadow .2s var(--ease); }
+    .service-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .service-card__title { margin: 4px 0 0; font-size: 22px; }
+    .service-card p { margin: 0; color: var(--muted); font-size: 15.5px; }
+    .service-card__more { margin-top: auto; display: inline-flex; align-items: center; gap: 8px; font-weight: 700; color: var(--terracotta); }
+  </style>
+</BaseLayout>

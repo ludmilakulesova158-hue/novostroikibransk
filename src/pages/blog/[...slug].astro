@@ -1,0 +1,104 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import CallToAction from '../../components/blocks/CallToAction.astro';
+import Portrait from '../../components/Portrait.astro';
+import Icon from '../../components/Icon.astro';
+import { SITE } from '../../consts';
+import { articleGraph } from '../../lib/schema';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts
+    .filter((p) => !p.data.draft)
+    .map((entry) => ({ params: { slug: entry.id }, props: { entry, all: posts } }));
+}
+
+const { entry, all } = Astro.props;
+const d = entry.data;
+const { Content } = await render(entry);
+const url = `/blog/${entry.id}/`;
+const fmt = (date: Date) => date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+const related = all
+  .filter((p) => !p.data.draft && p.id !== entry.id)
+  .sort((a, b) => +b.data.pubDate - +a.data.pubDate)
+  .slice(0, 3);
+
+const schema = articleGraph({
+  title: d.title,
+  description: d.description,
+  url,
+  datePublished: d.pubDate,
+  dateModified: d.updated,
+  keyword: d.keywords.join(', '),
+  section: d.category,
+});
+---
+<BaseLayout title={d.seoTitle ?? d.title} description={d.description} path={url} schema={schema} ogType="article">
+  <Breadcrumbs items={[{ name: 'Блог', href: '/blog/' }, { name: d.title, href: url }]} withSchema={false} />
+
+  <article class="post">
+    <div class="container container--narrow">
+      <div class="post__meta">
+        <span class="tag tag--terracotta">{d.category}</span>
+        <time datetime={d.pubDate.toISOString()}>{fmt(d.pubDate)}</time>
+        {d.updated && <span class="post__updated">обновлено {fmt(d.updated)}</span>}
+      </div>
+      <h1>{d.title}</h1>
+      {d.tldr && (
+        <aside class="factbox post__tldr"><strong>Коротко:</strong> {d.tldr}</aside>
+      )}
+      <div class="prose post__prose"><Content /></div>
+
+      <div class="post__author">
+        <Portrait src="/images/olga.jpg" alt="Ольга Валентинова" width={72} height={72} round class="post__avatar" />
+        <div>
+          <strong>{SITE.name}</strong>
+          <span>{SITE.role}, {SITE.agency}</span>
+          <p>Помогу с покупкой, продажей и проверкой недвижимости в Брянске. <a href="/o-eksperte/">Подробнее об эксперте</a>.</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  {related.length > 0 && (
+    <section class="section section--paper2">
+      <div class="container">
+        <header class="section-head"><h2>Читайте также</h2></header>
+        <div class="grid grid--3">
+          {related.map((p) => (
+            <a class="post-mini card" href={`/blog/${p.id}/`}>
+              <span class="tag tag--terracotta">{p.data.category}</span>
+              <h3>{p.data.title}</h3>
+              <span class="post-mini__more"><Icon name="arrow-right" size={16} /></span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <LeadForm title="Нужна помощь по этому вопросу?" text="Оставьте заявку — разберу вашу ситуацию и предложу решение. Консультация бесплатная." source={`blog:${entry.id}`} />
+  <CallToAction title="Подберём недвижимость под вас" secondary={{ text: 'Смотреть новостройки', href: '/novostroyki/' }} />
+
+  <style>
+    .post { padding: clamp(20px, 3vw, 40px) 0 clamp(10px, 2vw, 20px); }
+    .post__meta { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; color: var(--muted); font-size: 14px; margin-bottom: 14px; }
+    .post__updated { color: var(--muted-2); }
+    .post h1 { margin-bottom: 20px; }
+    .post__tldr { margin: 0 0 30px; font-size: 16.5px; line-height: 1.6; }
+    .post__author { display: flex; gap: 16px; align-items: flex-start; margin-top: 40px; padding-top: 26px; border-top: 1px solid var(--line); }
+    .post__avatar { width: 72px; height: 72px; flex: none; }
+    .post__author strong { display: block; }
+    .post__author span { font-size: 14px; color: var(--muted); }
+    .post__author p { margin: 8px 0 0; font-size: 15px; color: var(--muted); }
+    .post__author a { color: var(--terracotta); text-decoration: underline; text-underline-offset: 3px; }
+    .post-mini { display: flex; flex-direction: column; gap: 12px; transition: transform .2s var(--ease), box-shadow .2s var(--ease); }
+    .post-mini:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .post-mini .tag { align-self: flex-start; }
+    .post-mini h3 { margin: 4px 0 0; font-size: 19px; }
+    .post-mini__more { margin-top: auto; color: var(--terracotta); display: inline-flex; }
+  </style>
+</BaseLayout>

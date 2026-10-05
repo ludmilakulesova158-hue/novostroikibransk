@@ -1,0 +1,65 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import Icon from '../../components/Icon.astro';
+
+const posts = (await getCollection('blog'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => +b.data.pubDate - +a.data.pubDate);
+
+const fmt = (d: Date) => d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+<BaseLayout
+  title="Блог о недвижимости Брянска"
+  description="Статьи о недвижимости Брянска: как выбрать новостройку и ЖК, вторичка или новостройка, ипотека, проверка объекта, налоги и вычеты. Экспертный блог Ольги Валентиновой."
+  path="/blog/"
+>
+  <Breadcrumbs items={[{ name: 'Блог', href: '/blog/' }]} />
+
+  <section class="page-hero">
+    <div class="container">
+      <p class="eyebrow">Блог</p>
+      <h1>Полезное о недвижимости Брянска</h1>
+      <p class="lead">Практические статьи без воды: как выбирать, проверять и покупать недвижимость в Брянске и области.</p>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container">
+      {posts.length === 0 ? (
+        <p class="muted">Статьи скоро появятся.</p>
+      ) : (
+        <div class="grid grid--3">
+          {posts.map((p) => (
+            <a class="post-card card" href={`/blog/${p.id}/`}>
+              <span class="tag tag--terracotta">{p.data.category}</span>
+              <h2 class="post-card__title">{p.data.title}</h2>
+              <p>{p.data.description}</p>
+              <div class="post-card__foot">
+                <time datetime={p.data.pubDate.toISOString()}>{fmt(p.data.pubDate)}</time>
+                <span class="post-card__more"><Icon name="arrow-right" size={16} /></span>
+              </div>
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+
+  <LeadForm title="Нужен совет по вашей ситуации?" text="Статья — это общее. Ваш случай разберём индивидуально на бесплатной консультации." source="blog" />
+
+  <style>
+    .page-hero { padding: clamp(24px, 4vw, 48px) 0 clamp(20px, 3vw, 36px); }
+    .page-hero h1 { margin-bottom: 16px; }
+    .page-hero .lead { max-width: 68ch; }
+    .post-card { display: flex; flex-direction: column; gap: 12px; transition: transform .2s var(--ease), box-shadow .2s var(--ease); }
+    .post-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .post-card .tag { align-self: flex-start; }
+    .post-card__title { margin: 4px 0 0; font-size: 21px; }
+    .post-card p { margin: 0; color: var(--muted); font-size: 15.5px; }
+    .post-card__foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; color: var(--muted-2); font-size: 13.5px; }
+    .post-card__more { color: var(--terracotta); display: inline-flex; }
+  </style>
+</BaseLayout>

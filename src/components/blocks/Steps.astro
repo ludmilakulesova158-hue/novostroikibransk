@@ -1,0 +1,43 @@
+---
+interface Item { title: string; text: string }
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  items: Item[];
+}
+const { eyebrow, title, subtitle, items } = Astro.props;
+---
+<section class="steps section--paper2">
+  <div class="container steps__inner">
+    <header class="section-head steps__head">
+      {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+      {title && <h2 set:html={title} />}
+      {subtitle && <p class="lead">{subtitle}</p>}
+    </header>
+    <ol class="steps__list">
+      {items.map((it, i) => (
+        <li class="step">
+          <span class="step__num">{String(i + 1).padStart(2, '0')}</span>
+          <div class="step__body">
+            <h3>{it.title}</h3>
+            <p set:html={it.text} />
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .steps { padding: var(--section-y) 0; }
+  .steps__inner { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(28px, 5vw, 72px); align-items: start; }
+  .steps__head { margin-bottom: 0; position: sticky; top: 100px; }
+  .steps__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; counter-reset: none; }
+  .step { display: grid; grid-template-columns: auto 1fr; gap: 22px; padding: 26px 0; border-top: 1px solid var(--line); }
+  .step:last-child { border-bottom: 1px solid var(--line); }
+  .step__num { font-family: var(--font-display); font-size: 30px; color: var(--terracotta); line-height: 1; min-width: 48px; }
+  .step__body h3 { margin: 0 0 8px; font-size: 21px; }
+  .step__body p { margin: 0; color: var(--muted); font-size: 15.5px; }
+  @media (max-width: 880px) { .steps__inner { grid-template-columns: 1fr; } .steps__head { position: static; margin-bottom: 24px; } }
+</style>

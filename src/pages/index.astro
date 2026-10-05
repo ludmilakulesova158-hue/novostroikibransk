@@ -1,0 +1,209 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/blocks/Hero.astro';
+import Features from '../components/blocks/Features.astro';
+import Steps from '../components/blocks/Steps.astro';
+import Faqs from '../components/blocks/Faqs.astro';
+import Reviews from '../components/blocks/Reviews.astro';
+import CallToAction from '../components/blocks/CallToAction.astro';
+import LeadForm from '../components/LeadForm.astro';
+import ZHKCard from '../components/ZHKCard.astro';
+import Portrait from '../components/Portrait.astro';
+import Icon from '../components/Icon.astro';
+import { SITE } from '../consts';
+import { websiteGraph } from '../lib/schema';
+
+const uslugi = (await getCollection('uslugi')).sort((a, b) => a.data.order - b.data.order);
+const zhk = (await getCollection('zhk')).sort((a, b) => a.data.order - b.data.order);
+const featured = zhk.filter((z) => z.data.featured).slice(0, 3);
+const posts = (await getCollection('blog'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => +b.data.pubDate - +a.data.pubDate)
+  .slice(0, 2);
+
+const serviceItems = uslugi.slice(0, 6).map((s) => ({
+  icon: s.data.icon,
+  title: s.data.title,
+  text: s.data.tldr ?? s.data.description,
+  href: `/uslugi/${s.id}/`,
+}));
+
+const segments = [
+  {
+    icon: 'building',
+    title: 'Новостройки Брянска',
+    text: 'Подберу ЖК под бюджет, проверю застройщика и помогу с ипотекой на новостройку.',
+    href: '/novostroyki/',
+  },
+  {
+    icon: 'home',
+    title: 'Вторичное жильё',
+    text: 'Найду квартиру в готовом доме, проверю историю права и проведу безопасную сделку.',
+    href: '/vtorichka/',
+  },
+  {
+    icon: 'map-pin',
+    title: 'Загородная недвижимость',
+    text: 'Дома, коттеджи и участки в Брянском районе и области — с проверкой земли и границ.',
+    href: '/zagorod/',
+  },
+];
+
+const steps = [
+  { title: 'Консультация и запрос', text: 'Обсуждаем задачу, бюджет, район и сроки. Я уточняю детали и отвечаю на вопросы.' },
+  { title: 'Подбор и сравнение', text: 'Показываю 3–5 подходящих объектов, честно объясняю плюсы и минусы каждого.' },
+  { title: 'Проверка и ипотека', text: 'Проверяю юридическую чистоту и помогаю получить одобрение по ипотеке.' },
+  { title: 'Сделка и ключи', text: 'Веду сделку «под ключ»: документы, расчёты, регистрация и передача ключей.' },
+];
+
+const faq = [
+  { q: 'Сколько стоят ваши услуги?', a: 'Консультация и подбор для покупателя — бесплатно. Вознаграждение при продаже зависит от объекта и привязано к результату. Точные условия назову на консультации.' },
+  { q: 'Вы работаете только в Брянске?', a: 'Основная работа — Брянск и Брянская область, включая Брянский район. По другим городам помогу с консультацией и направлю к проверенным коллегам.' },
+  { q: 'Поможете с ипотекой, если был отказ?', a: 'Да. Разбираем причину отказа и подаём заявку в банки, где реальные шансы на одобрение. Часто вопрос решается сменой банка или корректной подачей.' },
+  { q: 'Как проверяется юридическая чистота объекта?', a: 'Проверяю собственников, обременения, аресты, зарегистрированных лиц, долги и перепланировки. По новостройкам — застройщика и проектную декларацию. Заключение вы получаете до внесения задатка.' },
+  { q: 'Можно ли купить недвижимость дистанционно?', a: 'Часть этапов возможна дистанционно. Конкретный порядок зависит от банка и Росреестра — обсудим на консультации.' },
+];
+---
+<BaseLayout
+  title="Эксперт по недвижимости в Брянске — Ольга Валентинова"
+  description="Ольга Валентинова — эксперт по недвижимости в Брянске. Подбор новостроек, вторичного жилья и загородных домов, ипотека, проверка объекта и сделка «под ключ»."
+  path="/"
+  schema={websiteGraph()}
+>
+  <Hero />
+
+  <Features
+    eyebrow="Услуги эксперта"
+    title='Всё, что я сделаю <span class="hl">для вас</span>'
+    subtitle="От подбора объекта до ключей в руках. Беру на себя рутину, переговоры и защиту ваших интересов."
+    items={serviceItems}
+    columns={3}
+  />
+
+  <section class="segments section--paper2">
+    <div class="container">
+      <header class="section-head section-head--center">
+        <p class="eyebrow">Три направления</p>
+        <h2>С чем я работаю в Брянске</h2>
+        <p class="lead">Новостройки, вторичка и загородка — под разные задачи и бюджеты.</p>
+      </header>
+      <div class="grid grid--3">
+        {segments.map((s) => (
+          <a class="segment" href={s.href}>
+            <span class="icon-badge"><Icon name={s.icon} size={26} /></span>
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+            <span class="segment__more">Смотреть <Icon name="arrow-right" size={16} /></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {featured.length > 0 && (
+    <section class="section">
+      <div class="container">
+        <header class="section-head">
+          <p class="eyebrow">Новостройки Брянска</p>
+          <h2>Жилые комплексы, которые стоит смотреть</h2>
+          <p class="lead">Актуальные цены, сроки сдачи и наличие квартир уточняются — оставьте заявку, подберу под ваш бюджет.</p>
+        </header>
+        <div class="grid grid--3">
+          {featured.map((z) => <ZHKCard zhk={z} />)}
+        </div>
+        <div class="section-foot">
+          <a class="btn btn--ghost" href="/novostroyki/">Все новостройки Брянска <Icon name="arrow-right" size={18} /></a>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <Steps
+    eyebrow="Как мы работаем"
+    title='Понятный процесс — <span class="hl">без сюрпризов</span>'
+    subtitle="Вы принимаете решения, я беру на себя остальное."
+    items={steps}
+  />
+
+  <section class="about-teaser section--dark">
+    <div class="container about-teaser__inner">
+      <Portrait
+        src="/images/olga.jpg"
+        alt="Ольга Валентинова, эксперт по недвижимости"
+        width={560}
+        height={640}
+        class="about-teaser__media"
+      />
+      <div class="about-teaser__text">
+        <p class="eyebrow">Об эксперте</p>
+        <h2>Ольга Валентинова</h2>
+        <p>Эксперт по недвижимости в Брянске и агентстве «Макромир». Помогаю покупать и продавать квартиры, дома и участки так, чтобы сделка была выгодной и безопасной.</p>
+        <ul class="about-teaser__list">
+          <li><Icon name="check" size={17} /> Знаю рынок Брянска по районам и ЖК</li>
+          <li><Icon name="check" size={17} /> Проверяю объект и застройщика до задатка</li>
+          <li><Icon name="check" size={17} /> Веду сделку «под ключ» — от показов до ключей</li>
+        </ul>
+        <a class="btn btn--primary" href="/o-eksperte/">Подробнее обо мне</a>
+      </div>
+    </div>
+  </section>
+
+  <Reviews />
+
+  {posts.length > 0 && (
+    <section class="section section--paper2">
+      <div class="container">
+        <header class="section-head">
+          <p class="eyebrow">Блог</p>
+          <h2>Полезно знать о недвижимости Брянска</h2>
+        </header>
+        <div class="grid grid--2">
+          {posts.map((p) => (
+            <a class="post-card card" href={`/blog/${p.id}/`}>
+              <span class="tag tag--terracotta">{p.data.category}</span>
+              <h3>{p.data.title}</h3>
+              <p>{p.data.description}</p>
+              <span class="post-card__more">Читать <Icon name="arrow-right" size={16} /></span>
+            </a>
+          ))}
+        </div>
+        <div class="section-foot">
+          <a class="btn btn--ghost" href="/blog/">Все статьи</a>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <Faqs items={faq} subtitle="Не нашли ответ — задайте вопрос на консультации." />
+  <LeadForm source="home" />
+  <CallToAction
+    title='Подберём недвижимость <span class="hl">под вашу задачу</span>'
+    text="Оставьте заявку — свяжусь с вами, отвечу на вопросы и предложу варианты. Консультация бесплатная."
+    secondary={{ text: 'Позвонить', href: SITE.phoneHref }}
+  />
+
+  <style>
+    .segments { padding: var(--section-y) 0; }
+    .segment { display: flex; flex-direction: column; gap: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: clamp(22px, 3vw, 30px); transition: transform .2s var(--ease), box-shadow .2s var(--ease); }
+    .segment:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .segment h3 { margin: 4px 0 0; font-size: 22px; }
+    .segment p { margin: 0; color: var(--muted); }
+    .segment__more { margin-top: auto; display: inline-flex; align-items: center; gap: 8px; font-weight: 700; color: var(--terracotta); }
+    .section-foot { margin-top: 34px; text-align: center; }
+    .about-teaser { padding: var(--section-y) 0; }
+    .about-teaser__inner { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(28px, 5vw, 64px); align-items: center; }
+    .about-teaser__media { border-radius: var(--r-xl); aspect-ratio: 7 / 8; }
+    .about-teaser__text p { color: var(--on-dark-muted); font-size: 17px; }
+    .about-teaser__list { list-style: none; padding: 0; margin: 20px 0 26px; display: grid; gap: 12px; }
+    .about-teaser__list li { display: flex; gap: 10px; align-items: center; color: var(--on-dark); font-weight: 600; }
+    .about-teaser__list svg { color: var(--ochre); flex: none; }
+    .post-card { display: flex; flex-direction: column; gap: 12px; text-decoration: none; transition: transform .2s var(--ease), box-shadow .2s var(--ease); }
+    .post-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .post-card h3 { margin: 4px 0 0; font-size: 22px; }
+    .post-card p { margin: 0; color: var(--muted); font-size: 15.5px; }
+    .post-card .tag { align-self: flex-start; }
+    .post-card__more { margin-top: auto; display: inline-flex; align-items: center; gap: 8px; font-weight: 700; color: var(--terracotta); }
+    @media (max-width: 880px) { .about-teaser__inner { grid-template-columns: 1fr; } .about-teaser__media { max-width: 380px; margin: 0 auto; width: 100%; } }
+  </style>
+</BaseLayout>

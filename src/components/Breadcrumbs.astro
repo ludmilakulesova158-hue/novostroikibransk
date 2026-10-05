@@ -1,0 +1,36 @@
+---
+import Icon from './Icon.astro';
+import { breadcrumbsNode } from '../lib/schema';
+
+interface Props {
+  items: { name: string; href: string }[];
+  withSchema?: boolean;
+}
+const { items, withSchema = true } = Astro.props;
+const all = [{ name: 'Главная', href: '/' }, ...items];
+---
+{breadcrumbsNode && withSchema && <script type="application/ld+json" set:html={JSON.stringify(breadcrumbsNode(all))} />}
+
+<nav class="crumbs" aria-label="Хлебные крошки">
+  <ol class="crumbs__list">
+    {all.map((item, i) => (
+      <li class="crumbs__item">
+        {i < all.length - 1 ? (
+          <a href={item.href}>{item.name}</a>
+        ) : (
+          <span aria-current="page">{item.name}</span>
+        )}
+        {i < all.length - 1 && <Icon name="arrow-right" size={14} class="crumbs__sep" />}
+      </li>
+    ))}
+  </ol>
+</nav>
+
+<style>
+  .crumbs { padding: 16px 0 0; }
+  .crumbs__list { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0; padding: 0; font-size: 13.5px; color: var(--muted); }
+  .crumbs__item { display: inline-flex; align-items: center; gap: 8px; }
+  .crumbs__item a:hover { color: var(--terracotta); }
+  .crumbs__item [aria-current] { color: var(--ink-2); font-weight: 600; }
+  .crumbs__sep { color: var(--muted-2); opacity: .6; }
+</style>

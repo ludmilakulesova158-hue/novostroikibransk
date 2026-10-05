@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Страница не найдена" description="Запрашиваемая страница не найдена." path="/404/" noindex={true}>
+  <section class="nf">
+    <div class="container nf__inner">
+      <p class="eyebrow">Ошибка 404</p>
+      <h1>Страница не найдена</h1>
+      <p class="lead">Возможно, ссылка устарела или содержит опечатку. Вернитесь на главную или посмотрите новостройки Брянска.</p>
+      <div class="nf__actions">
+        <a class="btn btn--primary" href="/">На главную</a>
+        <a class="btn btn--ghost" href="/novostroyki/">Новостройки Брянска</a>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .nf { padding: clamp(60px, 12vw, 140px) 0; }
+    .nf__inner { max-width: 620px; }
+    .nf__inner h1 { margin-bottom: 16px; }
+    .nf__actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 26px; }
+  </style>
+</BaseLayout>

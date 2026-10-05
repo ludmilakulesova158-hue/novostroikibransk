@@ -1,0 +1,92 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import CallToAction from '../../components/blocks/CallToAction.astro';
+import Icon from '../../components/Icon.astro';
+
+const cases = [
+  {
+    icon: 'building',
+    tag: 'Новостройка',
+    title: 'Семья выбирает квартиру в новостройке',
+    task: 'Бюджет ограничен, нужен ЖК недалеко от школы и работы.',
+    action: 'Сравнили ЖК Советского и Бежицкого районов, подобрали планировку, прошли проверку застройщика и получили одобрение по ипотеке.',
+    result: 'Сделка проведена «под ключ», семья получила квартиру с подходящей планировкой.',
+  },
+  {
+    icon: 'home',
+    tag: 'Вторичка',
+    title: 'Покупка вторички с проверкой истории',
+    task: 'Приглянулась квартира, но у продавца были вопросы по документам.',
+    action: 'Проверили собственников, обременения и историю переходов права, выявили риски и скорректировали условия сделки.',
+    result: 'Покупка прошла безопасно, интересы покупателя защищены.',
+  },
+  {
+    icon: 'map-pin',
+    tag: 'Загород',
+    title: 'Дом под Брянском с проверкой земли',
+    task: 'Нужен дом для круглогодичного проживания с участком.',
+    action: 'Подобрали объект в Брянском районе, выехали на место, проверили землю, границы и коммуникации.',
+    result: 'Сделка завершена, покупатель получил готовый дом без юридических сюрпризов.',
+  },
+  {
+    icon: 'trade',
+    tag: 'Trade-in',
+    title: 'Обмен квартиры на большую площадь',
+    task: 'Нужно было расширить жильё, не оставаясь без квартиры в процессе.',
+    action: 'Оценили текущую квартиру, синхронизировали продажу и покупку, рассчитали доплату и ипотеку на разницу.',
+    result: 'Обе сделки прошли в связке — без разрыва и стресса.',
+  },
+];
+---
+<BaseLayout
+  title="Примеры задач и решений"
+  description="Типовые задачи клиентов эксперта по недвижимости в Брянске: подбор новостройки, покупка вторички с проверкой, загородный дом, trade-in. Как я решаю такие ситуации."
+  path="/keysy/"
+>
+  <Breadcrumbs items={[{ name: 'Кейсы', href: '/keysy/' }]} />
+
+  <section class="page-hero">
+    <div class="container">
+      <p class="eyebrow">Практика</p>
+      <h1>Как я решаю типовые задачи</h1>
+      <p class="lead">Ниже — обобщённые сценарии из практики: с какой задачей приходят клиенты, что мы делаем и к какому результату это приводит. Конкретные детали сделок не раскрываю из уважения к клиентам.</p>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container">
+      <div class="grid grid--2">
+        {cases.map((c) => (
+          <article class="case card">
+            <div class="case__head">
+              <span class="icon-badge"><Icon name={c.icon} size={24} /></span>
+              <span class="tag tag--terracotta">{c.tag}</span>
+            </div>
+            <h2>{c.title}</h2>
+            <dl class="case__steps">
+              <div><dt>Задача</dt><dd>{c.task}</dd></div>
+              <div><dt>Что сделали</dt><dd>{c.action}</dd></div>
+              <div><dt>Результат</dt><dd>{c.result}</dd></div>
+            </dl>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <LeadForm title="Ваша задача — следующая" text="Расскажите о ситуации — предложу план действий и варианты. Консультация бесплатная." source="keysy" />
+  <CallToAction title="Хотите обсудить свой случай?" text="Позвоните или оставьте заявку — разберём вашу ситуацию." secondary={{ text: 'Отзывы', href: '/otzyvy/' }} />
+
+  <style>
+    .page-hero { padding: clamp(24px, 4vw, 48px) 0 clamp(20px, 3vw, 36px); }
+    .page-hero h1 { margin-bottom: 16px; }
+    .page-hero .lead { max-width: 70ch; }
+    .case__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+    .case h2 { margin: 0 0 16px; font-size: 22px; }
+    .case__steps { display: grid; gap: 12px; margin: 0; }
+    .case__steps dt { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--terracotta); font-weight: 700; }
+    .case__steps dd { margin: 3px 0 0; color: var(--ink-2); font-size: 15.5px; }
+  </style>
+</BaseLayout>

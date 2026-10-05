@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Reviews from '../../components/blocks/Reviews.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import CallToAction from '../../components/blocks/CallToAction.astro';
+import Icon from '../../components/Icon.astro';
+import { SITE } from '../../consts';
+
+const platforms = [
+  { icon: 'max', title: 'Отзывы в Макромире', text: 'Отзывы клиентов на площадке агентства.', href: SITE.max, fill: true },
+  { icon: 'vk', title: 'ВКонтакте', text: 'Профиль и отзывы во ВКонтакте.', href: SITE.vk, fill: true },
+];
+---
+<BaseLayout
+  title="Отзывы о работе эксперта"
+  description="Отзывы клиентов об эксперте по недвижимости Ольге Валентиновой в Брянске. Реальные отзывы на площадке «Макромир» и ВКонтакте."
+  path="/otzyvy/"
+>
+  <Breadcrumbs items={[{ name: 'Отзывы', href: '/otzyvy/' }]} />
+
+  <section class="page-hero">
+    <div class="container">
+      <p class="eyebrow">Отзывы</p>
+      <h1>Отзывы клиентов</h1>
+      <p class="lead">Лучшее доказательство работы — результаты клиентов. Реальные отзывы собраны на внешних площадках: откройте профиль и убедитесь сами.</p>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container">
+      <div class="grid grid--2">
+        {platforms.map((p) => (
+          <a class="review-platform card" href={p.href} target="_blank" rel="noopener">
+            <span class="icon-badge icon-badge--ochre"><Icon name={p.icon} size={26} fill={p.fill} /></span>
+            <div><h2>{p.title}</h2><p>{p.text}</p></div>
+            <span class="review-platform__more">Открыть <Icon name="arrow-up-right" size={18} /></span>
+          </a>
+        ))}
+      </div>
+      <p class="muted small" style="margin-top: 22px">
+        Хотите поделиться опытом работы? Напишите отзыв в одном из профилей выше — это помогает другим покупателям.
+      </p>
+    </div>
+  </section>
+
+  <Reviews title="Работаю на репутацию" subtitle="Каждая сделка — это доверие клиента, которое важно сохранить." />
+  <LeadForm title="Оставьте заявку" text="Хотите такой же результат? Расскажите о задаче — свяжусь и предложу план." source="otzyvy" />
+  <CallToAction title="Присоединяйтесь к довольным клиентам" text="Консультация бесплатная — начнём с вашей ситуации." secondary={{ text: 'Услуги', href: '/uslugi/' }} />
+
+  <style>
+    .page-hero { padding: clamp(24px, 4vw, 48px) 0 clamp(20px, 3vw, 36px); }
+    .page-hero h1 { margin-bottom: 16px; }
+    .page-hero .lead { max-width: 68ch; }
+    .review-platform { display: flex; align-items: center; gap: 18px; transition: transform .2s var(--ease), box-shadow .2s var(--ease); }
+    .review-platform:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .review-platform h2 { margin: 0 0 4px; font-size: 21px; }
+    .review-platform p { margin: 0; color: var(--muted); font-size: 15px; }
+    .review-platform__more { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; font-weight: 700; color: var(--terracotta); white-space: nowrap; }
+    @media (max-width: 560px) { .review-platform { flex-wrap: wrap; } .review-platform__more { margin-left: 0; } }
+  </style>
+</BaseLayout>

@@ -1,0 +1,66 @@
+---
+import Icon from '../Icon.astro';
+import { SITE } from '../../consts';
+
+interface Review { text: string; author: string; source: string }
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  items?: Review[];
+}
+const {
+  eyebrow = 'Репутация',
+  title = 'Отзывы покупателей и продавцов',
+  subtitle = 'Сотни сделок по Брянску и области. Реальные отзывы — на площадке «Макромир» и во ВКонтакте.',
+  items = [],
+} = Astro.props;
+---
+<section class="reviews">
+  <div class="container">
+    <header class="section-head section-head--center">
+      <p class="eyebrow">{eyebrow}</p>
+      <h2 set:html={title} />
+      <p class="lead">{subtitle}</p>
+    </header>
+
+    {items.length > 0 ? (
+      <div class="grid grid--3">
+        {items.map((r) => (
+          <figure class="review card">
+            <Icon name="quote" size={28} class="review__quote" />
+            <blockquote>{r.text}</blockquote>
+            <figcaption><strong>{r.author}</strong><span>{r.source}</span></figcaption>
+          </figure>
+        ))}
+      </div>
+    ) : (
+      <div class="reviews__links card">
+        <span class="icon-badge icon-badge--ochre"><Icon name="star" size={26} /></span>
+        <div class="reviews__links-text">
+          <h3>Где почитать отзывы</h3>
+          <p>Отзывы клиентов собраны на внешних площадках. Откройте профиль и убедитесь в реальных результатах работы.</p>
+        </div>
+        <div class="reviews__links-actions">
+          <a class="btn btn--dark btn--sm" href={SITE.vk} target="_blank" rel="noopener"><Icon name="vk" size={18} fill /> ВКонтакте</a>
+          <a class="btn btn--ghost btn--sm" href={SITE.max} target="_blank" rel="noopener"><Icon name="max" size={18} fill /> Отзывы в Макромире</a>
+        </div>
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .reviews { padding: var(--section-y) 0; }
+  .review { display: flex; flex-direction: column; gap: 14px; margin: 0; }
+  .review__quote { color: var(--terracotta); opacity: .8; }
+  .review blockquote { margin: 0; font-size: 16px; line-height: 1.6; color: var(--ink-2); }
+  .review figcaption { margin-top: auto; display: flex; flex-direction: column; }
+  .review figcaption strong { font-size: 15px; }
+  .review figcaption span { font-size: 13px; color: var(--muted); }
+  .reviews__links { display: grid; grid-template-columns: auto 1fr auto; gap: 22px; align-items: center; }
+  .reviews__links h3 { margin: 0 0 4px; font-size: 21px; }
+  .reviews__links p { margin: 0; color: var(--muted); font-size: 15px; }
+  .reviews__links-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  @media (max-width: 760px) { .reviews__links { grid-template-columns: 1fr; } }
+</style>

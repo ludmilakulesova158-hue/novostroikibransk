@@ -1,0 +1,59 @@
+---
+// Портрет с надёжным fallback: если файл не загрузился (404), показываем аккуратную заглушку,
+// а не «битую картинку». Реальное фото эксперта не генерируется (E-E-A-T) — только плейсхолдер.
+interface Props {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  class?: string;
+  eager?: boolean;
+  round?: boolean;
+}
+const { src, alt, width = 640, height = 760, class: cls = '', eager = false, round = false } = Astro.props;
+---
+<span class:list={['portrait', cls, { 'portrait--round': round }]}>
+  <img
+    src={src}
+    alt={alt}
+    width={width}
+    height={height}
+    loading={eager ? 'eager' : 'lazy'}
+    onerror="this.classList.add('is-broken')"
+  />
+  <span class="portrait__fallback" aria-hidden="true">
+    <span class="portrait__initials">ОВ</span>
+    <span class="portrait__label">Фото Ольги</span>
+  </span>
+</span>
+
+<style>
+  .portrait {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    background: linear-gradient(150deg, var(--sand), var(--terracotta-soft));
+  }
+  .portrait img {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+  .portrait img.is-broken { display: none; }
+  .portrait--round { border-radius: 50%; }
+  .portrait__fallback {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    gap: 6px;
+    text-align: center;
+    color: var(--terracotta-dark);
+    font-family: var(--font-display);
+  }
+  .portrait__initials { font-size: clamp(38px, 8vw, 64px); line-height: 1; opacity: .55; }
+  .portrait__label { font-family: var(--font-body); font-size: 13px; font-weight: 700; letter-spacing: .04em; opacity: .8; }
+</style>

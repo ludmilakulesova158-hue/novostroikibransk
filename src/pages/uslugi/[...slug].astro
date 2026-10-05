@@ -1,0 +1,80 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import Icon from '../../components/Icon.astro';
+import { articleGraph } from '../../lib/schema';
+
+export async function getStaticPaths() {
+  const uslugi = await getCollection('uslugi');
+  return uslugi.map((entry) => ({ params: { slug: entry.id }, props: { entry, all: uslugi } }));
+}
+
+const { entry, all } = Astro.props;
+const d = entry.data;
+const { Content } = await render(entry);
+const url = `/uslugi/${entry.id}/`;
+const related = all.filter((s) => s.id !== entry.id).slice(0, 3);
+
+const schema = articleGraph({
+  title: d.title,
+  description: d.description,
+  url,
+  datePublished: d.pubDate,
+  dateModified: d.updated,
+  keyword: d.keywords.join(', '),
+  section: 'Услуги',
+});
+---
+<BaseLayout title={d.seoTitle ?? d.title} description={d.description} path={url} schema={schema} ogType="article">
+  <Breadcrumbs items={[{ name: 'Услуги', href: '/uslugi/' }, { name: d.title, href: url }]} withSchema={false} />
+
+  <article class="service">
+    <div class="container container--narrow">
+      <p class="eyebrow">Услуга</p>
+      <h1>{d.title}</h1>
+      {d.tldr && (
+        <aside class="factbox service__tldr">
+          <strong>Коротко:</strong> {d.tldr}
+        </aside>
+      )}
+      <div class="prose service__prose">
+        <Content />
+      </div>
+      <div class="service__cta">
+        <a class="btn btn--primary" href="#zayavka">Оставить заявку <Icon name="arrow-right" size={18} /></a>
+        <a class="btn btn--ghost" href="tel:+79208552051">Позвонить</a>
+      </div>
+    </div>
+  </article>
+
+  <section class="section section--paper2">
+    <div class="container">
+      <header class="section-head"><h2 class="service__h2">Другие услуги</h2></header>
+      <div class="grid grid--3">
+        {related.map((s) => (
+          <a class="service-mini card" href={`/uslugi/${s.id}/`}>
+            <span class="icon-badge"><Icon name={s.data.icon} size={24} /></span>
+            <h3>{s.data.title}</h3>
+            <span class="service-mini__more">Подробнее <Icon name="arrow-right" size={16} /></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <LeadForm title="Обсудим вашу задачу" text="Оставьте контакты — свяжусь с вами и разберу вашу ситуацию. Консультация бесплатная." source={`usluga:${entry.id}`} />
+
+  <style>
+    .service { padding: clamp(20px, 3vw, 40px) 0 clamp(10px, 2vw, 20px); }
+    .service h1 { margin-bottom: 20px; }
+    .service__tldr { margin: 0 0 28px; font-size: 16.5px; line-height: 1.6; }
+    .service__cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 32px; }
+    .service__h2 { margin: 0; }
+    .service-mini { display: flex; flex-direction: column; gap: 12px; transition: transform .2s var(--ease), box-shadow .2s var(--ease); }
+    .service-mini:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .service-mini h3 { margin: 4px 0 0; font-size: 19px; }
+    .service-mini__more { margin-top: auto; display: inline-flex; align-items: center; gap: 8px; font-weight: 700; color: var(--terracotta); font-size: 15px; }
+  </style>
+</BaseLayout>
